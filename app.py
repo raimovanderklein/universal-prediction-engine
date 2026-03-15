@@ -39,11 +39,15 @@ app.json = CustomJSON(app)
 
 @app.route('/')
 def index():
-    return send_from_directory('templates', 'index.html')
+    return send_from_directory('static', 'layer7.html')
 
 @app.route('/layer7')
 def layer7_page():
     return send_from_directory('static', 'layer7.html')
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
 
 
 # ═══════════════════════════════════════════
