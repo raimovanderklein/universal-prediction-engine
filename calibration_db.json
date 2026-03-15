@@ -1,0 +1,3331 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-03-14",
+  "cancer_types": {
+    "melanoma": {
+      "name": "Melanoma",
+      "system_params": {
+        "beta": 1.055,
+        "epsilon_top": 0.77,
+        "epsilon_sub": 0.92,
+        "gamma": 0.05,
+        "doubling_time_days": 33
+      },
+      "stages": [
+        {
+          "id": "prev",
+          "name": "Prevention (P1-P2)",
+          "position": 2,
+          "position_name": "Accumulation",
+          "position_description": "Mutagenic damage accumulates. Lifestyle, chemoprevention, and screening operate here. The tumour has not yet committed.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0,
+          "prior_lines": 0
+        },
+        {
+          "id": "intercept",
+          "name": "Interception (P3)",
+          "position": 3,
+          "position_name": "Preview",
+          "position_description": "A precancerous lesion is visible but reversible. Chemoprevention (aspirin in CRC, tamoxifen in breast) targets this window. The tumour is previewing its form \u2014 intervene before commitment.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0.5,
+          "prior_lines": 0
+        },
+        {
+          "id": "early_surg",
+          "name": "Early surgery (P4)",
+          "position": 4,
+          "position_name": "Commitment",
+          "position_description": "The commitment threshold. Once crossed, the tumour is irreversibly on its path. Surgery at this position removes the committed structure before it builds. The most cost-effective intervention point.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "neo",
+          "name": "Neoadjuvant (P5-P8)",
+          "position": 6,
+          "position_name": "Architecture",
+          "position_description": "The tumour is building its microenvironment. Neoadjuvant therapy disrupts the architecture before it encounters the wider body. The tumour is vulnerable because its structure is incomplete.",
+          "regime": "Construction",
+          "depth": 2,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "adj",
+          "name": "Stage III Adjuvant",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0,
+          "position": 13,
+          "position_name": "Differentiation",
+          "regime": "Conservation",
+          "position_description": "Tumour surgically removed. Micro-metastases may remain. The system is building but not yet encountering.",
+          "regime_num": "IV",
+          "position_note": "Tumour removed. Micro-metastases differentiating. Intervention targets residual cells before they establish."
+        },
+        {
+          "id": "met_1l",
+          "name": "Stage IV 1L",
+          "depth": 2,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 14,
+          "position_name": "Surveillance",
+          "regime": "Conservation",
+          "position_description": "Metastases detected. The tumour has crossed into Encounter \u2014 it is now interacting with distant environments.",
+          "regime_num": "IV",
+          "position_note": "Established metastatic disease. Tumour maintaining itself through active surveillance of its microenvironment."
+        },
+        {
+          "id": "met_2l",
+          "name": "Stage IV 2L",
+          "depth": 2,
+          "tau": 6,
+          "prior_lines": 1,
+          "position": 15,
+          "position_name": "Compensation",
+          "regime": "Conservation",
+          "position_description": "First-line failed. The tumour has integrated information from the first treatment and adapted.",
+          "regime_num": "IV",
+          "position_note": "Resistant to first-line. Tumour compensating \u2014 drift has produced adapted subclones."
+        },
+        {
+          "id": "met_3l",
+          "name": "Stage IV 3L+",
+          "depth": 3,
+          "tau": 12,
+          "prior_lines": 2,
+          "position": 16,
+          "position_name": "Continuation",
+          "regime": "Conservation",
+          "position_description": "Multiple prior lines. The tumour is in conservation \u2014 actively maintaining resistance through surveillance and compensation loops.",
+          "regime_num": "IV",
+          "position_note": "Multiply resistant. Tumour at cycle boundary \u2014 conservation exhausted, approaching next transformation."
+        }
+      ],
+      "agents": [
+        {
+          "id": "nivo",
+          "name": "Nivolumab",
+          "M": 0.641,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "Anti-PD-1",
+          "class": "Checkpoint inhibitor",
+          "calibration": {
+            "source": "CheckMate 066",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "pembro_m",
+          "name": "Pembrolizumab",
+          "M": 0.621,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "Anti-PD-1",
+          "class": "Checkpoint inhibitor",
+          "calibration": {
+            "source": "KEYNOTE-006",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "ipi",
+          "name": "Ipilimumab",
+          "M": 0.563,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Provoke",
+          "mechanism": "Anti-CTLA-4",
+          "class": "Checkpoint inhibitor",
+          "calibration": {
+            "source": "MDX010-20",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "dab",
+          "name": "Dabrafenib",
+          "M": 0.673,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "BRAF inhibitor",
+          "class": "Targeted therapy",
+          "calibration": {
+            "source": "BREAK-3",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "tram",
+          "name": "Trametinib",
+          "M": 0.591,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "mechanism": "MEK inhibitor",
+          "class": "Targeted therapy",
+          "calibration": {
+            "source": "METRIC",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "enco",
+          "name": "Encorafenib",
+          "M": 0.679,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "BRAF inhibitor",
+          "class": "Targeted therapy",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "COLUMBUS: Enco+Bini 63% ORR BRAF+ 1L",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "bini",
+          "name": "Binimetinib",
+          "M": 0.586,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "mechanism": "MEK inhibitor",
+          "class": "Targeted therapy",
+          "calibration": {
+            "source": "Class est",
+            "quality": "estimated",
+            "confidence": 45,
+            "confidence_level": "low",
+            "basis": "Extrapolated from similar drug in same class"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "tali",
+          "name": "T-VEC",
+          "M": 0.55,
+          "subphase": 1,
+          "subposition": 1,
+          "action": "Provoke",
+          "mechanism": "Oncolytic virus",
+          "class": "Oncolytic",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "OPTiM: 26.4% ORR",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Catalyst"
+        },
+        {
+          "id": "teben",
+          "name": "Tebentafusp",
+          "M": 0.55,
+          "subphase": 1,
+          "action": "Provoke",
+          "calibration": {
+            "quality": "estimated",
+            "source": "IMCgp100-202 ~9% ORR uveal",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Catalyst"
+        },
+        {
+          "id": "atezo_m",
+          "name": "Atezolizumab",
+          "M": 0.615,
+          "subphase": 3,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "source": "Estimated from PD-L1 class",
+            "confidence": 45,
+            "confidence_level": "low",
+            "basis": "Extrapolated from similar drug in same class"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "lenva_m",
+          "name": "Lenvatinib",
+          "M": 0.58,
+          "subphase": 4,
+          "action": "Slow",
+          "calibration": {
+            "quality": "estimated",
+            "source": "Anti-angiogenic TKI",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "beva_m",
+          "name": "Bevacizumab",
+          "M": 0.52,
+          "subphase": 4,
+          "action": "Slow",
+          "calibration": {
+            "quality": "estimated",
+            "source": "Anti-VEGF",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "cobi",
+          "name": "Cobimetinib",
+          "M": 0.58,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "nivo_ipi_rela",
+          "name": "Spartalizumab",
+          "M": 0.52,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "temi",
+          "name": "Temozolomide",
+          "M": 0.42,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        }
+      ],
+      "param_descriptions": {
+        "beta": "Resistance adaptation rate \u2014 how quickly the tumour learns to compensate for treatment. Higher \u03b2 means faster adaptation (logarithmic maturity).",
+        "gamma": "Prior-line penalty \u2014 how much each previous treatment line reduces the next line's effectiveness. Higher \u03b3 means prior treatments have more impact.",
+        "epsilon_top": "Coverage independence \u2014 whether agents in different sub-phases act independently (\u03b5=0), synergistically (\u03b5>0), or with overlap (\u03b5<0).",
+        "epsilon_sub": "Sub-phase independence \u2014 same as above but within a single sub-phase when multiple agents target it.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster growth (lower dt) means the tumour cycles through the geometry more quickly."
+      },
+      "param_explanations": {
+        "beta": "Resistance adaptation rate. How fast the tumour learns to compensate for treatment over time. Higher \u03b2 = faster resistance. Appears as \u03b2\u00b7ln(1+\u03c4) in the formula.",
+        "gamma": "Prior-line penalty. How much each previous treatment line reduces subsequent response. Higher \u03b3 = more cross-resistance. Appears as \u03b3\u00b7p in the formula.",
+        "epsilon_top": "Sub-phase independence. Measures whether drugs targeting different sub-phases work independently (\u03b5=0), synergistically (\u03b5>0), or have overlapping effects (\u03b5<0). Determines \u03c3_cascade.",
+        "epsilon_sub": "Within-sub-phase independence. Same as \u03b5_top but for multiple drugs targeting the SAME sub-phase.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster-growing tumours (lower dt) respond differently to treatment timing."
+      },
+      "regimens": [
+        {
+          "name": "Nivo + Ipi",
+          "agents": [
+            "nivo",
+            "ipi"
+          ],
+          "stage": "met_1l",
+          "trial": "CheckMate-067",
+          "standard": true
+        },
+        {
+          "name": "Pembro monotherapy",
+          "agents": [
+            "pembro_m"
+          ],
+          "stage": "met_1l",
+          "trial": "KEYNOTE-006",
+          "standard": true
+        },
+        {
+          "name": "Dabrafenib + Trametinib (BRAF+)",
+          "agents": [
+            "dab",
+            "tram"
+          ],
+          "stage": "met_1l",
+          "trial": "COMBI-d",
+          "standard": true
+        },
+        {
+          "name": "Nivo + Rela",
+          "agents": [
+            "nivo",
+            "rela"
+          ],
+          "stage": "met_1l",
+          "trial": "RELATIVITY-047",
+          "standard": true
+        },
+        {
+          "name": "Pembro adjuvant",
+          "agents": [
+            "pembro_m"
+          ],
+          "stage": "adj",
+          "trial": "KEYNOTE-054",
+          "standard": true
+        }
+      ]
+    },
+    "breast_hr": {
+      "name": "Breast HR+/HER2\u2212",
+      "system_params": {
+        "beta": 0.75,
+        "epsilon_top": 0.075,
+        "epsilon_sub": 0.5,
+        "gamma": 0.06,
+        "doubling_time_days": 80
+      },
+      "stages": [
+        {
+          "id": "prev",
+          "name": "Prevention (P1-P2)",
+          "position": 2,
+          "position_name": "Accumulation",
+          "position_description": "Mutagenic damage accumulates. Lifestyle, chemoprevention, and screening operate here. The tumour has not yet committed.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0,
+          "prior_lines": 0
+        },
+        {
+          "id": "intercept",
+          "name": "Interception (P3)",
+          "position": 3,
+          "position_name": "Preview",
+          "position_description": "A precancerous lesion is visible but reversible. Chemoprevention (aspirin in CRC, tamoxifen in breast) targets this window. The tumour is previewing its form \u2014 intervene before commitment.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0.5,
+          "prior_lines": 0
+        },
+        {
+          "id": "early_surg",
+          "name": "Early surgery (P4)",
+          "position": 4,
+          "position_name": "Commitment",
+          "position_description": "The commitment threshold. Once crossed, the tumour is irreversibly on its path. Surgery at this position removes the committed structure before it builds. The most cost-effective intervention point.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "neo",
+          "name": "Neoadjuvant (P5-P8)",
+          "position": 6,
+          "position_name": "Architecture",
+          "position_description": "The tumour is building its microenvironment. Neoadjuvant therapy disrupts the architecture before it encounters the wider body. The tumour is vulnerable because its structure is incomplete.",
+          "regime": "Construction",
+          "depth": 2,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "adj",
+          "name": "Adjuvant",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0,
+          "position": 13,
+          "position_name": "Differentiation",
+          "regime": "Conservation",
+          "position_description": "Post-surgery adjuvant. ER+ tumour removed; hormonal therapy targets residual disease in the construction phase.",
+          "regime_num": "IV",
+          "position_note": "Post-surgery. ER+ cells differentiating. Endocrine therapy prevents re-establishment."
+        },
+        {
+          "id": "met_1l",
+          "name": "Metastatic 1L",
+          "depth": 2,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 14,
+          "position_name": "Surveillance",
+          "regime": "Conservation",
+          "position_description": "Metastatic disease detected. First encounter with systemic therapy.",
+          "regime_num": "IV",
+          "position_note": "Metastatic. ER-driven growth maintained through hormonal surveillance loop."
+        },
+        {
+          "id": "met_2l",
+          "name": "Metastatic 2L",
+          "depth": 2,
+          "tau": 5,
+          "prior_lines": 1,
+          "position": 15,
+          "position_name": "Compensation",
+          "regime": "Conservation",
+          "position_description": "Progressed on first-line. Tumour has integrated resistance to endocrine \u00b1 CDK4/6 inhibition.",
+          "regime_num": "IV",
+          "position_note": "CDK4/6i-resistant. ESR1 mutations or bypass pathways compensating."
+        },
+        {
+          "id": "met_3l",
+          "name": "Metastatic 3L+",
+          "depth": 3,
+          "tau": 10,
+          "prior_lines": 2,
+          "position": 16,
+          "position_name": "Continuation",
+          "regime": "Conservation",
+          "position_description": "Heavily pretreated. Conservation regime \u2014 tumour maintains multi-drug resistance.",
+          "regime_num": "IV",
+          "position_note": "Multi-endocrine resistant. Approaching phenotype switch."
+        }
+      ],
+      "agents": [
+        {
+          "id": "let",
+          "name": "Letrozole",
+          "M": 0.558,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "mechanism": "Aromatase inhibitor",
+          "class": "Endocrine therapy",
+          "calibration": {
+            "source": "PALOMA-2 ctrl",
+            "quality": "calibrated",
+            "confidence": 82,
+            "confidence_level": "high",
+            "basis": "Control arm of combination trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "ana",
+          "name": "Anastrozole",
+          "M": 0.558,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "mechanism": "Aromatase inhibitor",
+          "class": "Endocrine therapy",
+          "calibration": {
+            "source": "Class est",
+            "quality": "estimated",
+            "confidence": 45,
+            "confidence_level": "low",
+            "basis": "Extrapolated from similar drug in same class"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "exe",
+          "name": "Exemestane",
+          "M": 0.57,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "mechanism": "Aromatase inhibitor",
+          "class": "Endocrine therapy",
+          "calibration": {
+            "source": "Class est",
+            "quality": "estimated",
+            "confidence": 45,
+            "confidence_level": "low",
+            "basis": "Extrapolated from similar drug in same class"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "tam",
+          "name": "Tamoxifen",
+          "M": 0.585,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "mechanism": "SERM",
+          "class": "Endocrine therapy",
+          "calibration": {
+            "source": "Historical",
+            "quality": "estimated",
+            "confidence": 55,
+            "confidence_level": "moderate",
+            "basis": "Historical data \u2014 not from a controlled trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "fulv",
+          "name": "Fulvestrant",
+          "M": 0.62,
+          "subphase": 1,
+          "subposition": 1,
+          "action": "Prevent",
+          "mechanism": "ER degrader",
+          "class": "Endocrine therapy",
+          "calibration": {
+            "source": "PALOMA-3 ctrl",
+            "quality": "calibrated",
+            "confidence": 82,
+            "confidence_level": "high",
+            "basis": "Control arm of combination trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "imlun",
+          "name": "Imlunestrant",
+          "M": 0.6,
+          "subphase": 1,
+          "subposition": 1,
+          "action": "Prevent",
+          "mechanism": "Next-gen oral SERD",
+          "class": "Endocrine therapy",
+          "calibration": {
+            "source": "EMBER-3 est",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "palbo",
+          "name": "Palbociclib",
+          "M": 0.477,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "CDK4/6 inhibitor",
+          "class": "CDK4/6 inhibitor",
+          "calibration": {
+            "source": "Single-agent est",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "ribo",
+          "name": "Ribociclib",
+          "M": 0.477,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "CDK4/6 inhibitor",
+          "class": "CDK4/6 inhibitor",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "MONALEESA-2: Let+Ribo 40.7% vs Let 34.7%",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "abema",
+          "name": "Abemaciclib",
+          "M": 0.486,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "CDK4/6 inhibitor",
+          "class": "CDK4/6 inhibitor",
+          "calibration": {
+            "source": "MONARCH-1",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "alpe",
+          "name": "Alpelisib",
+          "M": 0.61,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "PI3K\u03b1 inhibitor",
+          "class": "PI3K inhibitor",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "SOLAR-1: 26.6% ORR PIK3CA+ (combo with fulvestrant)",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "inavo",
+          "name": "Inavolisib",
+          "M": 0.59,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "PI3K\u03b1 selective",
+          "class": "PI3K inhibitor",
+          "calibration": {
+            "source": "INAVO120 est",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "eve",
+          "name": "Everolimus",
+          "M": 0.35,
+          "subphase": 4,
+          "subposition": 0,
+          "action": "Slow",
+          "mechanism": "mTOR inhibitor",
+          "class": "mTOR inhibitor",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "BOLERO-2: Eve+Exem 12.6% vs Exem 1.7% met 2L",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "cape",
+          "name": "Capecitabine",
+          "M": 0.58,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "mechanism": "Oral 5-FU prodrug",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "Historical",
+            "quality": "estimated",
+            "confidence": 55,
+            "confidence_level": "moderate",
+            "basis": "Historical data \u2014 not from a controlled trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "tdxd",
+          "name": "T-DXd (HER2-low)",
+          "M": 0.52,
+          "subphase": 3,
+          "subposition": 1,
+          "action": "Catalyse",
+          "mechanism": "ADC HER2-targeting",
+          "class": "ADC",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "DESTINY-Breast04: T-DXd 52.3% ORR HER2-low 2L+",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Catalyst"
+        },
+        {
+          "id": "sg",
+          "name": "Sacituzumab govitecan",
+          "M": 0.53,
+          "subphase": 3,
+          "action": "Catalyse",
+          "calibration": {
+            "quality": "estimated",
+            "source": "TROPiCS-02 ~14% ORR 2L+",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Catalyst"
+        },
+        {
+          "id": "dato",
+          "name": "Dato-DXd",
+          "M": 0.52,
+          "subphase": 3,
+          "action": "Catalyse",
+          "calibration": {
+            "quality": "estimated",
+            "source": "TROPION-Breast01 ~26% ORR",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Catalyst"
+        },
+        {
+          "id": "carbo_b",
+          "name": "Carboplatin",
+          "M": 0.45,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "pembro_b",
+          "name": "Pembrolizumab",
+          "M": 0.38,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "tucatinib",
+          "name": "Tucatinib",
+          "M": 0.55,
+          "subphase": 1,
+          "subposition": 1,
+          "action": "Prevent",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "elacestrant",
+          "name": "Elacestrant",
+          "M": 0.59,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        }
+      ],
+      "param_descriptions": {
+        "beta": "Resistance adaptation rate \u2014 how quickly the tumour learns to compensate for treatment. Higher \u03b2 means faster adaptation (logarithmic maturity).",
+        "gamma": "Prior-line penalty \u2014 how much each previous treatment line reduces the next line's effectiveness. Higher \u03b3 means prior treatments have more impact.",
+        "epsilon_top": "Coverage independence \u2014 whether agents in different sub-phases act independently (\u03b5=0), synergistically (\u03b5>0), or with overlap (\u03b5<0).",
+        "epsilon_sub": "Sub-phase independence \u2014 same as above but within a single sub-phase when multiple agents target it.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster growth (lower dt) means the tumour cycles through the geometry more quickly."
+      },
+      "param_explanations": {
+        "beta": "Resistance adaptation rate. How fast the tumour learns to compensate for treatment over time. Higher \u03b2 = faster resistance. Appears as \u03b2\u00b7ln(1+\u03c4) in the formula.",
+        "gamma": "Prior-line penalty. How much each previous treatment line reduces subsequent response. Higher \u03b3 = more cross-resistance. Appears as \u03b3\u00b7p in the formula.",
+        "epsilon_top": "Sub-phase independence. Measures whether drugs targeting different sub-phases work independently (\u03b5=0), synergistically (\u03b5>0), or have overlapping effects (\u03b5<0). Determines \u03c3_cascade.",
+        "epsilon_sub": "Within-sub-phase independence. Same as \u03b5_top but for multiple drugs targeting the SAME sub-phase.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster-growing tumours (lower dt) respond differently to treatment timing."
+      },
+      "regimens": [
+        {
+          "name": "Letrozole + Palbociclib",
+          "agents": [
+            "let",
+            "palbo"
+          ],
+          "stage": "met_1l",
+          "trial": "PALOMA-2",
+          "standard": true
+        },
+        {
+          "name": "Fulvestrant + Abemaciclib",
+          "agents": [
+            "fulv",
+            "abema"
+          ],
+          "stage": "met_2l",
+          "trial": "MONARCH-2",
+          "standard": true
+        },
+        {
+          "name": "Letrozole + Ribociclib",
+          "agents": [
+            "let",
+            "ribo"
+          ],
+          "stage": "met_1l",
+          "trial": "MONALEESA-2",
+          "standard": true
+        },
+        {
+          "name": "Fulvestrant + Alpelisib (PIK3CA+)",
+          "agents": [
+            "fulv",
+            "alpe"
+          ],
+          "stage": "met_2l",
+          "trial": "SOLAR-1",
+          "standard": true
+        },
+        {
+          "name": "Fulvestrant monotherapy",
+          "agents": [
+            "fulv"
+          ],
+          "stage": "met_2l",
+          "trial": "FALCON",
+          "standard": true
+        }
+      ]
+    },
+    "nsclc": {
+      "name": "NSCLC (non-squamous)",
+      "system_params": {
+        "beta": 0.9,
+        "epsilon_top": 0.0,
+        "epsilon_sub": 0.7,
+        "gamma": 0.07,
+        "doubling_time_days": 50
+      },
+      "stages": [
+        {
+          "id": "prev",
+          "name": "Prevention (P1-P2)",
+          "position": 2,
+          "position_name": "Accumulation",
+          "position_description": "Mutagenic damage accumulates. Lifestyle, chemoprevention, and screening operate here. The tumour has not yet committed.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0,
+          "prior_lines": 0
+        },
+        {
+          "id": "intercept",
+          "name": "Interception (P3)",
+          "position": 3,
+          "position_name": "Preview",
+          "position_description": "A precancerous lesion is visible but reversible. Chemoprevention (aspirin in CRC, tamoxifen in breast) targets this window. The tumour is previewing its form \u2014 intervene before commitment.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0.5,
+          "prior_lines": 0
+        },
+        {
+          "id": "early_surg",
+          "name": "Early surgery (P4)",
+          "position": 4,
+          "position_name": "Commitment",
+          "position_description": "The commitment threshold. Once crossed, the tumour is irreversibly on its path. Surgery at this position removes the committed structure before it builds. The most cost-effective intervention point.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "neo",
+          "name": "Neoadjuvant",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0,
+          "position": 8,
+          "position_name": "Selection",
+          "regime": "Construction",
+          "position_description": "Neoadjuvant: treating before surgery. The tumour is in early construction \u2014 vulnerable to disruption before it completes.",
+          "regime_num": "II",
+          "position_note": "Pre-surgical. Tumour still in construction \u2014 attacking before full establishment."
+        },
+        {
+          "id": "adj",
+          "name": "Adjuvant",
+          "depth": 1,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 13,
+          "position_name": "Differentiation",
+          "regime": "Conservation",
+          "position_description": "Post-surgery adjuvant. Architecture established but encounter has not begun.",
+          "regime_num": "IV",
+          "position_note": "Post-resection. Residual micro-metastases differentiating."
+        },
+        {
+          "id": "met_1l",
+          "name": "Metastatic 1L",
+          "depth": 2,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 14,
+          "position_name": "Surveillance",
+          "regime": "Conservation",
+          "position_description": "Metastatic first-line. The tumour is producing metastases \u2014 it has entered Encounter.",
+          "regime_num": "IV",
+          "position_note": "Established metastatic NSCLC. PD-L1/driver mutation status determines surveillance mechanism."
+        },
+        {
+          "id": "met_2l",
+          "name": "Metastatic 2L",
+          "depth": 2,
+          "tau": 6,
+          "prior_lines": 1,
+          "position": 15,
+          "position_name": "Compensation",
+          "regime": "Conservation",
+          "position_description": "Second-line. The tumour has integrated resistance to first-line IO \u00b1 chemo.",
+          "regime_num": "IV",
+          "position_note": "Progressed on 1L. Resistance mutations (T790M, MET amp) compensating."
+        },
+        {
+          "id": "met_3l",
+          "name": "Metastatic 3L+",
+          "depth": 3,
+          "tau": 12,
+          "prior_lines": 2,
+          "position": 16,
+          "position_name": "Continuation",
+          "regime": "Conservation",
+          "position_description": "Third-line. Conservation regime \u2014 the tumour monitors and compensates for therapeutic pressure.",
+          "regime_num": "IV",
+          "position_note": "Multiply pretreated. Conservation regime nearly exhausted."
+        }
+      ],
+      "agents": [
+        {
+          "id": "pembro_l",
+          "name": "Pembrolizumab",
+          "M": 0.57,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "Anti-PD-1",
+          "class": "Checkpoint inhibitor",
+          "calibration": {
+            "source": "KEYNOTE-024",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "nivo_l",
+          "name": "Nivolumab",
+          "M": 0.58,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "Anti-PD-1",
+          "class": "Checkpoint inhibitor",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "CheckMate 026: 26% ORR 1L unselected",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "atezo",
+          "name": "Atezolizumab",
+          "M": 0.575,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "Anti-PD-L1",
+          "class": "Checkpoint inhibitor",
+          "calibration": {
+            "source": "OAK est",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "durva",
+          "name": "Durvalumab",
+          "M": 0.58,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "Anti-PD-L1",
+          "class": "Checkpoint inhibitor",
+          "calibration": {
+            "source": "PACIFIC est",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "ipi_l",
+          "name": "Ipilimumab",
+          "M": 0.6,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Provoke",
+          "mechanism": "Anti-CTLA-4",
+          "class": "Checkpoint inhibitor",
+          "calibration": {
+            "source": "CM-227 est",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "carbo",
+          "name": "Carboplatin",
+          "M": 0.528,
+          "subphase": 4,
+          "subposition": 0,
+          "action": "Slow",
+          "mechanism": "Platinum",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "KN-189 derived",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "cis",
+          "name": "Cisplatin",
+          "M": 0.52,
+          "subphase": 4,
+          "subposition": 0,
+          "action": "Slow",
+          "mechanism": "Platinum",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "Class est",
+            "quality": "estimated",
+            "confidence": 45,
+            "confidence_level": "low",
+            "basis": "Extrapolated from similar drug in same class"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "pem",
+          "name": "Pemetrexed",
+          "M": 0.52,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "Antifolate",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "KN-189 derived",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "pac_l",
+          "name": "Paclitaxel",
+          "M": 0.54,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "mechanism": "Taxane",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "Historical",
+            "quality": "estimated",
+            "confidence": 55,
+            "confidence_level": "moderate",
+            "basis": "Historical data \u2014 not from a controlled trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "doce_l",
+          "name": "Docetaxel",
+          "M": 0.35,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "mechanism": "Taxane",
+          "class": "Chemotherapy",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "TAX 317/320: 8-12% ORR 2L, ~22% 1L",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "osi",
+          "name": "Osimertinib",
+          "M": 0.4,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "EGFR TKI 3rd gen",
+          "class": "Targeted (EGFR)",
+          "calibration": {
+            "source": "FLAURA",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "alec",
+          "name": "Alectinib",
+          "M": 0.38,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "ALK inhibitor",
+          "class": "Targeted (ALK)",
+          "calibration": {
+            "source": "ALEX",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "soto",
+          "name": "Sotorasib",
+          "M": 0.37,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "KRAS G12C",
+          "class": "Targeted (KRAS)",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "CodeBreaK 200: Sotorasib 28.1% ORR KRAS G12C 2L",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "beva_l",
+          "name": "Bevacizumab",
+          "M": 0.42,
+          "subphase": 4,
+          "subposition": 1,
+          "action": "Slow",
+          "mechanism": "Anti-VEGF",
+          "class": "Anti-angiogenic",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "E4599: Bev added to carbo/pac improved ORR 35%\u219215% single",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "treme",
+          "name": "Tremelimumab",
+          "M": 0.56,
+          "subphase": 1,
+          "action": "Provoke",
+          "calibration": {
+            "quality": "estimated",
+            "source": "POSEIDON: CTLA-4 class",
+            "confidence": 45,
+            "confidence_level": "low",
+            "basis": "Extrapolated from similar drug in same class"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "ramu",
+          "name": "Ramucirumab",
+          "M": 0.38,
+          "subphase": 4,
+          "action": "Slow",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "REVEL: Ram+Doc 23% vs Doc 14% 2L",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "crizo",
+          "name": "Crizotinib",
+          "M": 0.39,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "PROFILE 1014 ALK+ ~74% ORR calibrated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "lora",
+          "name": "Lorlatinib",
+          "M": 0.37,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "CROWN ALK+ ~76% ORR calibrated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "amiva",
+          "name": "Amivantamab (EGFR exon20)",
+          "M": 0.42,
+          "subphase": 3,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "source": "CHRYSALIS, bispecific",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Catalyst"
+        },
+        {
+          "id": "dato_l",
+          "name": "Dato-DXd",
+          "M": 0.5,
+          "subphase": 3,
+          "action": "Catalyse",
+          "calibration": {
+            "quality": "estimated",
+            "source": "TROPION-Lung01 ADC",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Catalyst"
+        },
+        {
+          "id": "tirag",
+          "name": "Tiragolumab (anti-TIGIT)",
+          "M": 0.54,
+          "subphase": 1,
+          "action": "Provoke",
+          "calibration": {
+            "quality": "estimated",
+            "source": "SKYSCRAPER-01",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "adagrasib",
+          "name": "Adagrasib (KRAS G12C)",
+          "M": 0.6,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "lorla",
+          "name": "Lorlatinib (ALK+)",
+          "M": 0.66,
+          "subphase": 1,
+          "subposition": 1,
+          "action": "Prevent",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "CROWN: Lorlatinib 76% ORR ALK+ 1L",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        }
+      ],
+      "param_descriptions": {
+        "beta": "Resistance adaptation rate \u2014 how quickly the tumour learns to compensate for treatment. Higher \u03b2 means faster adaptation (logarithmic maturity).",
+        "gamma": "Prior-line penalty \u2014 how much each previous treatment line reduces the next line's effectiveness. Higher \u03b3 means prior treatments have more impact.",
+        "epsilon_top": "Coverage independence \u2014 whether agents in different sub-phases act independently (\u03b5=0), synergistically (\u03b5>0), or with overlap (\u03b5<0).",
+        "epsilon_sub": "Sub-phase independence \u2014 same as above but within a single sub-phase when multiple agents target it.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster growth (lower dt) means the tumour cycles through the geometry more quickly."
+      },
+      "param_explanations": {
+        "beta": "Resistance adaptation rate. How fast the tumour learns to compensate for treatment over time. Higher \u03b2 = faster resistance. Appears as \u03b2\u00b7ln(1+\u03c4) in the formula.",
+        "gamma": "Prior-line penalty. How much each previous treatment line reduces subsequent response. Higher \u03b3 = more cross-resistance. Appears as \u03b3\u00b7p in the formula.",
+        "epsilon_top": "Sub-phase independence. Measures whether drugs targeting different sub-phases work independently (\u03b5=0), synergistically (\u03b5>0), or have overlapping effects (\u03b5<0). Determines \u03c3_cascade.",
+        "epsilon_sub": "Within-sub-phase independence. Same as \u03b5_top but for multiple drugs targeting the SAME sub-phase.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster-growing tumours (lower dt) respond differently to treatment timing."
+      },
+      "regimens": [
+        {
+          "name": "Pembro + Carbo + Pem",
+          "agents": [
+            "pembro_l",
+            "carbo",
+            "pem"
+          ],
+          "stage": "met_1l",
+          "trial": "KEYNOTE-189",
+          "standard": true
+        },
+        {
+          "name": "Nivo + Ipi + Chemo",
+          "agents": [
+            "nivo_l",
+            "ipi_l",
+            "carbo",
+            "pem"
+          ],
+          "stage": "met_1l",
+          "trial": "CheckMate-9LA",
+          "standard": true
+        },
+        {
+          "name": "Osimertinib (EGFR+)",
+          "agents": [
+            "osi"
+          ],
+          "stage": "met_1l",
+          "trial": "FLAURA",
+          "standard": true
+        },
+        {
+          "name": "Alectinib (ALK+)",
+          "agents": [
+            "alec"
+          ],
+          "stage": "met_1l",
+          "trial": "ALEX",
+          "standard": true
+        },
+        {
+          "name": "Pembro monotherapy (PD-L1\u226550%)",
+          "agents": [
+            "pembro_l"
+          ],
+          "stage": "met_1l",
+          "trial": "KEYNOTE-024",
+          "standard": true
+        }
+      ]
+    },
+    "pancreatic": {
+      "name": "Pancreatic adenocarcinoma",
+      "system_params": {
+        "beta": 0.984,
+        "epsilon_top": 0.999,
+        "epsilon_sub": 0.5,
+        "gamma": 0.08,
+        "doubling_time_days": 40
+      },
+      "stages": [
+        {
+          "id": "prev",
+          "name": "Prevention (P1-P2)",
+          "position": 2,
+          "position_name": "Accumulation",
+          "position_description": "Mutagenic damage accumulates. Lifestyle, chemoprevention, and screening operate here. The tumour has not yet committed.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0,
+          "prior_lines": 0
+        },
+        {
+          "id": "intercept",
+          "name": "Interception (P3)",
+          "position": 3,
+          "position_name": "Preview",
+          "position_description": "A precancerous lesion is visible but reversible. Chemoprevention (aspirin in CRC, tamoxifen in breast) targets this window. The tumour is previewing its form \u2014 intervene before commitment.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0.5,
+          "prior_lines": 0
+        },
+        {
+          "id": "early_surg",
+          "name": "Early surgery (P4)",
+          "position": 4,
+          "position_name": "Commitment",
+          "position_description": "The commitment threshold. Once crossed, the tumour is irreversibly on its path. Surgery at this position removes the committed structure before it builds. The most cost-effective intervention point.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "neo",
+          "name": "Neoadjuvant (P5-P8)",
+          "position": 6,
+          "position_name": "Architecture",
+          "position_description": "The tumour is building its microenvironment. Neoadjuvant therapy disrupts the architecture before it encounters the wider body. The tumour is vulnerable because its structure is incomplete.",
+          "regime": "Construction",
+          "depth": 2,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "adj",
+          "name": "Adjuvant",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0,
+          "position": 13,
+          "position_name": "Differentiation",
+          "regime": "Conservation",
+          "position_description": "Post-resection adjuvant. Pancreatic cancer in construction \u2014 stroma is dense, architecture established.",
+          "regime_num": "IV",
+          "position_note": "Post-Whipple. Residual cells in stroma-dense microenvironment."
+        },
+        {
+          "id": "la",
+          "name": "Locally advanced",
+          "depth": 2,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 13,
+          "position_name": "Differentiation",
+          "regime": "Conservation",
+          "position_description": "Locally advanced, unresectable. The tumour has selected its configuration but has not yet metastasised.",
+          "regime_num": "IV",
+          "position_note": "Locally advanced. Tumour established but not yet metastatic \u2014 early conservation."
+        },
+        {
+          "id": "met_1l",
+          "name": "Metastatic 1L",
+          "depth": 2,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 14,
+          "position_name": "Surveillance",
+          "regime": "Conservation",
+          "position_description": "Metastatic first-line. The tumour has crossed into Encounter. Dense stroma limits drug penetration.",
+          "regime_num": "IV",
+          "position_note": "Metastatic. Dense stroma provides surveillance shield. High resistance to intervention."
+        },
+        {
+          "id": "met_2l",
+          "name": "Metastatic 2L",
+          "depth": 2,
+          "tau": 6,
+          "prior_lines": 1,
+          "position": 15,
+          "position_name": "Compensation",
+          "regime": "Conservation",
+          "position_description": "Second-line. Gemcitabine or FOLFIRINOX resistance integrated.",
+          "regime_num": "IV",
+          "position_note": "Second-line. Compensating against prior chemotherapy. Extremely resistant."
+        }
+      ],
+      "agents": [
+        {
+          "id": "gem",
+          "name": "Gemcitabine",
+          "M": 0.5366,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "Nucleoside analogue",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "Burris 1997",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "fu_p",
+          "name": "5-FU + leucovorin",
+          "M": 0.5366,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "mechanism": "Antimetabolite",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "Class est",
+            "quality": "estimated",
+            "confidence": 45,
+            "confidence_level": "low",
+            "basis": "Extrapolated from similar drug in same class"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "iri_p",
+          "name": "Irinotecan",
+          "M": 0.5292,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "mechanism": "Topoisomerase I",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "Estimated",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "oxa_p",
+          "name": "Oxaliplatin",
+          "M": 0.5292,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "mechanism": "Platinum",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "Estimated",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "nabp",
+          "name": "Nab-paclitaxel",
+          "M": 0.5391,
+          "subphase": 4,
+          "subposition": 0,
+          "action": "Slow",
+          "mechanism": "Taxane + stroma",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "MPACT est",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "ola_p",
+          "name": "Olaparib",
+          "M": 0.5691,
+          "subphase": 4,
+          "subposition": 1,
+          "action": "Slow",
+          "mechanism": "PARP inhibitor",
+          "class": "Targeted therapy",
+          "calibration": {
+            "source": "POLO est",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "nliri",
+          "name": "Nal-irinotecan",
+          "M": 0.54,
+          "subphase": 1,
+          "action": "Prevent",
+          "calibration": {
+            "quality": "estimated",
+            "source": "NAPOLI-1 ~16% ORR combo",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "pembro_p",
+          "name": "Pembrolizumab (MSI-H)",
+          "M": 0.55,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "olapk",
+          "name": "Olaparib (BRCA+)",
+          "M": 0.58,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "erlotinib",
+          "name": "Erlotinib",
+          "M": 0.32,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "nal_iri",
+          "name": "Nal-Irinotecan",
+          "M": 0.52,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        }
+      ],
+      "param_descriptions": {
+        "beta": "Resistance adaptation rate \u2014 how quickly the tumour learns to compensate for treatment. Higher \u03b2 means faster adaptation (logarithmic maturity).",
+        "gamma": "Prior-line penalty \u2014 how much each previous treatment line reduces the next line's effectiveness. Higher \u03b3 means prior treatments have more impact.",
+        "epsilon_top": "Coverage independence \u2014 whether agents in different sub-phases act independently (\u03b5=0), synergistically (\u03b5>0), or with overlap (\u03b5<0).",
+        "epsilon_sub": "Sub-phase independence \u2014 same as above but within a single sub-phase when multiple agents target it.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster growth (lower dt) means the tumour cycles through the geometry more quickly."
+      },
+      "param_explanations": {
+        "beta": "Resistance adaptation rate. How fast the tumour learns to compensate for treatment over time. Higher \u03b2 = faster resistance. Appears as \u03b2\u00b7ln(1+\u03c4) in the formula.",
+        "gamma": "Prior-line penalty. How much each previous treatment line reduces subsequent response. Higher \u03b3 = more cross-resistance. Appears as \u03b3\u00b7p in the formula.",
+        "epsilon_top": "Sub-phase independence. Measures whether drugs targeting different sub-phases work independently (\u03b5=0), synergistically (\u03b5>0), or have overlapping effects (\u03b5<0). Determines \u03c3_cascade.",
+        "epsilon_sub": "Within-sub-phase independence. Same as \u03b5_top but for multiple drugs targeting the SAME sub-phase.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster-growing tumours (lower dt) respond differently to treatment timing."
+      },
+      "regimens": [
+        {
+          "name": "FOLFIRINOX",
+          "agents": [
+            "fu_p",
+            "iri_p",
+            "oxa_p"
+          ],
+          "stage": "met_1l",
+          "trial": "PRODIGE 4",
+          "standard": true
+        },
+        {
+          "name": "Gem + Nab-paclitaxel",
+          "agents": [
+            "gem",
+            "nabp"
+          ],
+          "stage": "met_1l",
+          "trial": "MPACT",
+          "standard": true
+        },
+        {
+          "name": "Gemcitabine mono",
+          "agents": [
+            "gem"
+          ],
+          "stage": "met_1l",
+          "trial": "Standard",
+          "standard": true
+        }
+      ]
+    },
+    "prostate": {
+      "name": "Prostate (mCRPC)",
+      "system_params": {
+        "beta": 0.75,
+        "epsilon_top": 0.5,
+        "epsilon_sub": 0.5,
+        "gamma": 0.3,
+        "doubling_time_days": 60
+      },
+      "stages": [
+        {
+          "id": "prev",
+          "name": "Prevention (P1-P2)",
+          "position": 2,
+          "position_name": "Accumulation",
+          "position_description": "Mutagenic damage accumulates. Lifestyle, chemoprevention, and screening operate here. The tumour has not yet committed.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0,
+          "prior_lines": 0
+        },
+        {
+          "id": "intercept",
+          "name": "Interception (P3)",
+          "position": 3,
+          "position_name": "Preview",
+          "position_description": "A precancerous lesion is visible but reversible. Chemoprevention (aspirin in CRC, tamoxifen in breast) targets this window. The tumour is previewing its form \u2014 intervene before commitment.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0.5,
+          "prior_lines": 0
+        },
+        {
+          "id": "early_surg",
+          "name": "Early surgery (P4)",
+          "position": 4,
+          "position_name": "Commitment",
+          "position_description": "The commitment threshold. Once crossed, the tumour is irreversibly on its path. Surgery at this position removes the committed structure before it builds. The most cost-effective intervention point.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "neo",
+          "name": "Neoadjuvant (P5-P8)",
+          "position": 6,
+          "position_name": "Architecture",
+          "position_description": "The tumour is building its microenvironment. Neoadjuvant therapy disrupts the architecture before it encounters the wider body. The tumour is vulnerable because its structure is incomplete.",
+          "regime": "Construction",
+          "depth": 2,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "hspc",
+          "name": "mHSPC",
+          "depth": 1,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 13,
+          "position_name": "Differentiation",
+          "regime": "Conservation",
+          "position_description": "Hormone-sensitive. The tumour is still being tested by androgen deprivation \u2014 it has not yet selected its resistant form.",
+          "regime_num": "IV",
+          "position_note": "Hormone-sensitive. AR-dependent growth \u2014 still differentiating along hormonal axis."
+        },
+        {
+          "id": "crpc_1l",
+          "name": "mCRPC 1L",
+          "depth": 2,
+          "tau": 4,
+          "prior_lines": 1,
+          "position": 14,
+          "position_name": "Surveillance",
+          "regime": "Conservation",
+          "position_description": "Castration-resistant first-line. The tumour has discovered how to grow without androgen \u2014 a new relational state.",
+          "regime_num": "IV",
+          "position_note": "Castrate-resistant. AR pathway reactivated despite ADT \u2014 surveillance mechanism adapted."
+        },
+        {
+          "id": "crpc_2l",
+          "name": "mCRPC 2L",
+          "depth": 2,
+          "tau": 8,
+          "prior_lines": 2,
+          "position": 15,
+          "position_name": "Compensation",
+          "regime": "Conservation",
+          "position_description": "CRPC second-line. The tumour has reached equilibrium with one line of CRPC therapy.",
+          "regime_num": "IV",
+          "position_note": "Second-line CRPC. AR splice variants, neuroendocrine differentiation compensating."
+        },
+        {
+          "id": "crpc_3l",
+          "name": "mCRPC 3L+",
+          "depth": 3,
+          "tau": 14,
+          "prior_lines": 3,
+          "position": 16,
+          "position_name": "Continuation",
+          "regime": "Conservation",
+          "position_description": "CRPC third-line+. Conservation \u2014 multi-mechanism resistance maintained.",
+          "regime_num": "IV",
+          "position_note": "Heavily pretreated. Near cycle exhaustion. Taxane-resistant, AR-independent."
+        }
+      ],
+      "agents": [
+        {
+          "id": "adt",
+          "name": "ADT (LHRH)",
+          "M": 0.5,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "mechanism": "Testosterone suppression",
+          "class": "Hormonal",
+          "calibration": {
+            "source": "SOC",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "abi",
+          "name": "Abiraterone",
+          "M": 0.7212,
+          "subphase": 1,
+          "subposition": 1,
+          "action": "Prevent",
+          "mechanism": "CYP17 inhibitor",
+          "class": "Novel hormonal",
+          "calibration": {
+            "source": "COU-AA-302",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "enza",
+          "name": "Enzalutamide",
+          "M": 0.7063,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "AR antagonist",
+          "class": "Novel hormonal",
+          "calibration": {
+            "source": "PREVAIL",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "apa",
+          "name": "Apalutamide",
+          "M": 0.7163,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "AR antagonist",
+          "class": "Novel hormonal",
+          "calibration": {
+            "source": "SPARTAN est",
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "daro",
+          "name": "Darolutamide",
+          "M": 0.55,
+          "subphase": 2,
+          "subposition": 0,
+          "action": "Transform",
+          "mechanism": "AR antagonist",
+          "class": "Novel hormonal",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "ARASENS: similar to enzalutamide",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "doce",
+          "name": "Docetaxel",
+          "M": 0.6731,
+          "subphase": 4,
+          "subposition": 0,
+          "action": "Slow",
+          "mechanism": "Taxane",
+          "class": "Chemotherapy",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "TAX 327: 35% ORR. Microtubule inhibitor = SP2",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "caba",
+          "name": "Cabazitaxel",
+          "M": 0.6831,
+          "subphase": 4,
+          "subposition": 0,
+          "action": "Slow",
+          "mechanism": "Taxane 2nd gen",
+          "class": "Chemotherapy",
+          "calibration": {
+            "source": "TROPIC",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "lupsma",
+          "name": "Lu-PSMA-617",
+          "M": 0.8458,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Catalyse",
+          "mechanism": "Radioligand",
+          "class": "Radioligand",
+          "calibration": {
+            "source": "VISION",
+            "quality": "calibrated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Catalyst"
+        },
+        {
+          "id": "ola_pr",
+          "name": "Olaparib",
+          "M": 0.62,
+          "subphase": 3,
+          "subposition": 1,
+          "action": "Regain control",
+          "mechanism": "PARP inhibitor",
+          "class": "Targeted therapy",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "PROfound: 33.3% ORR HRR+",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "ra223",
+          "name": "Radium-223",
+          "M": 0.66,
+          "subphase": 4,
+          "action": "Slow",
+          "calibration": {
+            "quality": "estimated",
+            "source": "ALSYMPCA bone met ~5% ORR",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "pembro_pr",
+          "name": "Pembrolizumab (MSI-H)",
+          "M": 0.48,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "cabo_pr",
+          "name": "Cabozantinib",
+          "M": 0.52,
+          "subphase": 4,
+          "subposition": 0,
+          "action": "Slow",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "radi223",
+          "name": "Radium-223",
+          "M": 0.55,
+          "subphase": 4,
+          "subposition": 1,
+          "action": "Slow",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "nira",
+          "name": "Niraparib (HRR+)",
+          "M": 0.56,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        }
+      ],
+      "param_descriptions": {
+        "beta": "Resistance adaptation rate \u2014 how quickly the tumour learns to compensate for treatment. Higher \u03b2 means faster adaptation (logarithmic maturity).",
+        "gamma": "Prior-line penalty \u2014 how much each previous treatment line reduces the next line's effectiveness. Higher \u03b3 means prior treatments have more impact.",
+        "epsilon_top": "Coverage independence \u2014 whether agents in different sub-phases act independently (\u03b5=0), synergistically (\u03b5>0), or with overlap (\u03b5<0).",
+        "epsilon_sub": "Sub-phase independence \u2014 same as above but within a single sub-phase when multiple agents target it.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster growth (lower dt) means the tumour cycles through the geometry more quickly."
+      },
+      "param_explanations": {
+        "beta": "Resistance adaptation rate. How fast the tumour learns to compensate for treatment over time. Higher \u03b2 = faster resistance. Appears as \u03b2\u00b7ln(1+\u03c4) in the formula.",
+        "gamma": "Prior-line penalty. How much each previous treatment line reduces subsequent response. Higher \u03b3 = more cross-resistance. Appears as \u03b3\u00b7p in the formula.",
+        "epsilon_top": "Sub-phase independence. Measures whether drugs targeting different sub-phases work independently (\u03b5=0), synergistically (\u03b5>0), or have overlapping effects (\u03b5<0). Determines \u03c3_cascade.",
+        "epsilon_sub": "Within-sub-phase independence. Same as \u03b5_top but for multiple drugs targeting the SAME sub-phase.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster-growing tumours (lower dt) respond differently to treatment timing."
+      },
+      "regimens": [
+        {
+          "name": "ADT + Abiraterone",
+          "agents": [
+            "adt",
+            "abi"
+          ],
+          "stage": "hspc",
+          "trial": "LATITUDE",
+          "standard": true
+        },
+        {
+          "name": "Enzalutamide",
+          "agents": [
+            "enza"
+          ],
+          "stage": "crpc_1l",
+          "trial": "PREVAIL",
+          "standard": true
+        },
+        {
+          "name": "Docetaxel",
+          "agents": [
+            "doce"
+          ],
+          "stage": "crpc_1l",
+          "trial": "TAX-327",
+          "standard": true
+        },
+        {
+          "name": "Lu-PSMA-617",
+          "agents": [
+            "lupsma"
+          ],
+          "stage": "crpc_2l",
+          "trial": "VISION",
+          "standard": true
+        },
+        {
+          "name": "Cabazitaxel",
+          "agents": [
+            "caba"
+          ],
+          "stage": "crpc_2l",
+          "trial": "TROPIC",
+          "standard": true
+        }
+      ]
+    },
+    "rcc": {
+      "name": "Renal cell carcinoma (clear cell)",
+      "system_params": {
+        "beta": 0.5,
+        "gamma": 0.25,
+        "epsilon_top": -0.99,
+        "epsilon_sub": 0.0,
+        "doubling_time_days": 60
+      },
+      "stages": [
+        {
+          "id": "prev",
+          "name": "Prevention (P1-P2)",
+          "position": 2,
+          "position_name": "Accumulation",
+          "position_description": "Mutagenic damage accumulates. Lifestyle, chemoprevention, and screening operate here. The tumour has not yet committed.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0,
+          "prior_lines": 0
+        },
+        {
+          "id": "intercept",
+          "name": "Interception (P3)",
+          "position": 3,
+          "position_name": "Preview",
+          "position_description": "A precancerous lesion is visible but reversible. Chemoprevention (aspirin in CRC, tamoxifen in breast) targets this window. The tumour is previewing its form \u2014 intervene before commitment.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0.5,
+          "prior_lines": 0
+        },
+        {
+          "id": "early_surg",
+          "name": "Early surgery (P4)",
+          "position": 4,
+          "position_name": "Commitment",
+          "position_description": "The commitment threshold. Once crossed, the tumour is irreversibly on its path. Surgery at this position removes the committed structure before it builds. The most cost-effective intervention point.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "neo",
+          "name": "Neoadjuvant (P5-P8)",
+          "position": 6,
+          "position_name": "Architecture",
+          "position_description": "The tumour is building its microenvironment. Neoadjuvant therapy disrupts the architecture before it encounters the wider body. The tumour is vulnerable because its structure is incomplete.",
+          "regime": "Construction",
+          "depth": 2,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "met_1l",
+          "name": "Metastatic 1L",
+          "depth": 2,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 14,
+          "position_name": "Surveillance",
+          "regime": "Conservation",
+          "position_description": "Metastatic first-line. RCC is highly vascular \u2014 the encounter with the host vasculature defines its biology.",
+          "regime_num": "IV",
+          "position_note": "Treatment-naive metastatic. VHL-loss driven angiogenesis provides surveillance mechanism."
+        },
+        {
+          "id": "met_2l",
+          "name": "Metastatic 2L",
+          "depth": 2,
+          "tau": 6,
+          "prior_lines": 1,
+          "position": 15,
+          "position_name": "Compensation",
+          "regime": "Conservation",
+          "position_description": "Second-line. The tumour has integrated resistance to first-line IO+TKI.",
+          "regime_num": "IV",
+          "position_note": "Post-TKI/IO. Alternative angiogenic pathways compensating (MET, AXL)."
+        },
+        {
+          "id": "met_3l",
+          "name": "Metastatic 3L",
+          "depth": 3,
+          "tau": 12,
+          "prior_lines": 2,
+          "position": 16,
+          "position_name": "Continuation",
+          "regime": "Conservation",
+          "position_description": "Third-line+. Conservation \u2014 multiple resistance mechanisms active simultaneously.",
+          "regime_num": "IV",
+          "position_note": "Multiply pretreated. Conservation regime near exhaustion."
+        }
+      ],
+      "agents": [
+        {
+          "id": "nivo_r",
+          "name": "Nivolumab",
+          "M": 0.649,
+          "subphase": 3,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "CheckMate-025 2L ORR 25%",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "pembro_r",
+          "name": "Pembrolizumab",
+          "M": 0.649,
+          "subphase": 3,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "ipi_r",
+          "name": "Ipilimumab",
+          "M": 0.388,
+          "subphase": 1,
+          "action": "Provoke",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "cabo",
+          "name": "Cabozantinib",
+          "M": 0.472,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "CABOSUN 1L ORR 33%",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "suni",
+          "name": "Sunitinib",
+          "M": 0.449,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "CheckMate-9ER control 27%",
+            "confidence": 82,
+            "confidence_level": "high",
+            "basis": "Control arm of combination trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "axi",
+          "name": "Axitinib",
+          "M": 0.468,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "AXIS-like 1L ~32%",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "lenva",
+          "name": "Lenvatinib",
+          "M": 0.48,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "eve_r",
+          "name": "Everolimus",
+          "M": 0.605,
+          "subphase": 4,
+          "action": "Slow",
+          "calibration": {
+            "quality": "estimated",
+            "source": "RECORD-1 ~5% ORR",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "tivo",
+          "name": "Tivozanib",
+          "M": 0.449,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "Estimated from sunitinib class",
+            "confidence": 45,
+            "confidence_level": "low",
+            "basis": "Extrapolated from similar drug in same class"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "nivo_ipi_combo",
+          "name": "Belzutifan",
+          "M": 0.6,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "HIF-2\u03b1 inhibitor, LITESPARK",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "savol",
+          "name": "Savolitinib",
+          "M": 0.55,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "MET inhibitor",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "evero_r",
+          "name": "Everolimus",
+          "M": 0.3,
+          "subphase": 4,
+          "subposition": 1,
+          "action": "Slow",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "RECORD-1: 1.8% ORR",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "bela",
+          "name": "Belzutifan (HIF-2\u03b1)",
+          "M": 0.58,
+          "subphase": 1,
+          "subposition": 0,
+          "action": "Prevent",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        }
+      ],
+      "param_descriptions": {
+        "beta": "Resistance adaptation rate \u2014 how quickly the tumour learns to compensate for treatment. Higher \u03b2 means faster adaptation (logarithmic maturity).",
+        "gamma": "Prior-line penalty \u2014 how much each previous treatment line reduces the next line's effectiveness. Higher \u03b3 means prior treatments have more impact.",
+        "epsilon_top": "Coverage independence \u2014 whether agents in different sub-phases act independently (\u03b5=0), synergistically (\u03b5>0), or with overlap (\u03b5<0).",
+        "epsilon_sub": "Sub-phase independence \u2014 same as above but within a single sub-phase when multiple agents target it.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster growth (lower dt) means the tumour cycles through the geometry more quickly."
+      },
+      "param_explanations": {
+        "beta": "Resistance adaptation rate. How fast the tumour learns to compensate for treatment over time. Higher \u03b2 = faster resistance. Appears as \u03b2\u00b7ln(1+\u03c4) in the formula.",
+        "gamma": "Prior-line penalty. How much each previous treatment line reduces subsequent response. Higher \u03b3 = more cross-resistance. Appears as \u03b3\u00b7p in the formula.",
+        "epsilon_top": "Sub-phase independence. Measures whether drugs targeting different sub-phases work independently (\u03b5=0), synergistically (\u03b5>0), or have overlapping effects (\u03b5<0). Determines \u03c3_cascade.",
+        "epsilon_sub": "Within-sub-phase independence. Same as \u03b5_top but for multiple drugs targeting the SAME sub-phase.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster-growing tumours (lower dt) respond differently to treatment timing."
+      },
+      "regimens": [
+        {
+          "name": "Nivo + Cabo",
+          "agents": [
+            "nivo_r",
+            "cabo"
+          ],
+          "stage": "met_1l",
+          "trial": "CheckMate-9ER",
+          "standard": true
+        },
+        {
+          "name": "Pembro + Axitinib",
+          "agents": [
+            "pembro_r",
+            "axi"
+          ],
+          "stage": "met_1l",
+          "trial": "KEYNOTE-426",
+          "standard": true
+        },
+        {
+          "name": "Pembro + Lenvatinib",
+          "agents": [
+            "pembro_r",
+            "lenva"
+          ],
+          "stage": "met_1l",
+          "trial": "CLEAR",
+          "standard": true
+        },
+        {
+          "name": "Nivo + Ipi",
+          "agents": [
+            "nivo_r",
+            "ipi_r"
+          ],
+          "stage": "met_1l",
+          "trial": "CheckMate-214",
+          "standard": true
+        },
+        {
+          "name": "Sunitinib mono",
+          "agents": [
+            "suni"
+          ],
+          "stage": "met_1l",
+          "trial": "Standard",
+          "standard": true
+        }
+      ]
+    },
+    "colorectal": {
+      "name": "Colorectal (metastatic)",
+      "system_params": {
+        "beta": 1.09,
+        "gamma": 0.3,
+        "epsilon_top": 0.57,
+        "epsilon_sub": 0.0,
+        "doubling_time_days": 90
+      },
+      "stages": [
+        {
+          "id": "prev",
+          "name": "Prevention (P1-P2)",
+          "position": 2,
+          "position_name": "Accumulation",
+          "position_description": "Mutagenic damage accumulates. Lifestyle, chemoprevention, and screening operate here. The tumour has not yet committed.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0,
+          "prior_lines": 0
+        },
+        {
+          "id": "intercept",
+          "name": "Interception (P3)",
+          "position": 3,
+          "position_name": "Preview",
+          "position_description": "A precancerous lesion is visible but reversible. Chemoprevention (aspirin in CRC, tamoxifen in breast) targets this window. The tumour is previewing its form \u2014 intervene before commitment.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 0.5,
+          "prior_lines": 0
+        },
+        {
+          "id": "early_surg",
+          "name": "Early surgery (P4)",
+          "position": 4,
+          "position_name": "Commitment",
+          "position_description": "The commitment threshold. Once crossed, the tumour is irreversibly on its path. Surgery at this position removes the committed structure before it builds. The most cost-effective intervention point.",
+          "regime": "Potentiality",
+          "depth": 1,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "neo",
+          "name": "Neoadjuvant (P5-P8)",
+          "position": 6,
+          "position_name": "Architecture",
+          "position_description": "The tumour is building its microenvironment. Neoadjuvant therapy disrupts the architecture before it encounters the wider body. The tumour is vulnerable because its structure is incomplete.",
+          "regime": "Construction",
+          "depth": 2,
+          "tau": 1,
+          "prior_lines": 0
+        },
+        {
+          "id": "met_1l",
+          "name": "Metastatic 1L",
+          "depth": 2,
+          "tau": 2,
+          "prior_lines": 0,
+          "position": 14,
+          "position_name": "Surveillance",
+          "regime": "Conservation",
+          "position_description": "Metastatic first-line. CRC metastases typically to liver \u2014 the tumour is encountering a new tissue environment.",
+          "regime_num": "IV",
+          "position_note": "First-line metastatic. Wnt/RAS/BRAF pathways maintain proliferative surveillance."
+        },
+        {
+          "id": "met_2l",
+          "name": "Metastatic 2L",
+          "depth": 2,
+          "tau": 6,
+          "prior_lines": 1,
+          "position": 15,
+          "position_name": "Compensation",
+          "regime": "Conservation",
+          "position_description": "Second-line. Resistance to first-line chemo\u00b1targeted integrated.",
+          "regime_num": "IV",
+          "position_note": "Second-line. RAS mutations and EGFR resistance compensating."
+        },
+        {
+          "id": "met_3l",
+          "name": "Metastatic 3L+",
+          "depth": 3,
+          "tau": 12,
+          "prior_lines": 2,
+          "position": 16,
+          "position_name": "Continuation",
+          "regime": "Conservation",
+          "position_description": "Third-line+. Late conservation \u2014 limited options, tumour maintains multi-drug resistance.",
+          "regime_num": "IV",
+          "position_note": "Refractory. Near cycle boundary. Very limited treatment options."
+        }
+      ],
+      "agents": [
+        {
+          "id": "fu",
+          "name": "5-FU/leucovorin",
+          "M": 0.593,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "Standard mono ~20% ORR",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "cape_c",
+          "name": "Capecitabine",
+          "M": 0.593,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "Oral 5-FU equivalent",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "oxa",
+          "name": "Oxaliplatin",
+          "M": 0.603,
+          "subphase": 4,
+          "action": "Slow",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "Mono ~24% ORR estimated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "iri",
+          "name": "Irinotecan",
+          "M": 0.598,
+          "subphase": 1,
+          "action": "Prevent",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "Mono ~22% ORR estimated",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "bev",
+          "name": "Bevacizumab",
+          "M": 0.552,
+          "subphase": 4,
+          "action": "Slow",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "Anti-VEGF mono ~3% ORR",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "cetux",
+          "name": "Cetuximab (KRAS WT)",
+          "M": 0.568,
+          "subphase": 3,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "Mono ~10% ORR KRAS WT",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "pani",
+          "name": "Panitumumab (KRAS WT)",
+          "M": 0.568,
+          "subphase": 3,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "source": "Similar to cetuximab",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "pembro_c",
+          "name": "Pembrolizumab (MSI-H only)",
+          "M": 0.659,
+          "subphase": 3,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "KEYNOTE-177 MSI-H 43.8%",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "rego",
+          "name": "Regorafenib",
+          "M": 0.836,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "CORRECT ~1% ORR 3L",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "tas",
+          "name": "TAS-102",
+          "M": 0.28,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "RECOURSE: 1.6% ORR",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        },
+        {
+          "id": "enco_c",
+          "name": "Encorafenib (BRAF V600E)",
+          "M": 0.769,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "BEACON ~12% mono est.",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "fruq",
+          "name": "Fruquintinib",
+          "M": 0.53,
+          "subphase": 4,
+          "action": "Slow",
+          "calibration": {
+            "quality": "estimated",
+            "source": "VEGFR1/2/3 inhibitor, FRESCO-2",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "soto_c",
+          "name": "Sotorasib (KRAS G12C)",
+          "M": 0.56,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "CodeBreaK 100",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "adagr",
+          "name": "Adagrasib (KRAS G12C)",
+          "M": 0.56,
+          "subphase": 2,
+          "action": "Transform",
+          "calibration": {
+            "quality": "estimated",
+            "source": "KRYSTAL-1",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "tucatinib",
+          "name": "Tucatinib (HER2+)",
+          "M": 0.57,
+          "subphase": 3,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "source": "MOUNTAINEER",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Architect"
+        },
+        {
+          "id": "nivo_c",
+          "name": "Nivolumab (MSI-H)",
+          "M": 0.58,
+          "subphase": 3,
+          "subposition": 0,
+          "action": "Regain control",
+          "calibration": {
+            "quality": "estimated",
+            "confidence": 30,
+            "confidence_level": "low",
+            "basis": "Mechanism-based estimate \u2014 no direct trial data for this cancer type"
+          },
+          "function": "Sentinel"
+        },
+        {
+          "id": "tas102",
+          "name": "TAS-102 (Lonsurf)",
+          "M": 0.28,
+          "subphase": 2,
+          "subposition": 1,
+          "action": "Transform",
+          "calibration": {
+            "quality": "calibrated",
+            "source": "RECOURSE: 1.6% ORR",
+            "confidence": 92,
+            "confidence_level": "high",
+            "basis": "Single-agent or pivotal trial"
+          },
+          "function": "Miner"
+        }
+      ],
+      "param_descriptions": {
+        "beta": "Resistance adaptation rate \u2014 how quickly the tumour learns to compensate for treatment. Higher \u03b2 means faster adaptation (logarithmic maturity).",
+        "gamma": "Prior-line penalty \u2014 how much each previous treatment line reduces the next line's effectiveness. Higher \u03b3 means prior treatments have more impact.",
+        "epsilon_top": "Coverage independence \u2014 whether agents in different sub-phases act independently (\u03b5=0), synergistically (\u03b5>0), or with overlap (\u03b5<0).",
+        "epsilon_sub": "Sub-phase independence \u2014 same as above but within a single sub-phase when multiple agents target it.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster growth (lower dt) means the tumour cycles through the geometry more quickly."
+      },
+      "param_explanations": {
+        "beta": "Resistance adaptation rate. How fast the tumour learns to compensate for treatment over time. Higher \u03b2 = faster resistance. Appears as \u03b2\u00b7ln(1+\u03c4) in the formula.",
+        "gamma": "Prior-line penalty. How much each previous treatment line reduces subsequent response. Higher \u03b3 = more cross-resistance. Appears as \u03b3\u00b7p in the formula.",
+        "epsilon_top": "Sub-phase independence. Measures whether drugs targeting different sub-phases work independently (\u03b5=0), synergistically (\u03b5>0), or have overlapping effects (\u03b5<0). Determines \u03c3_cascade.",
+        "epsilon_sub": "Within-sub-phase independence. Same as \u03b5_top but for multiple drugs targeting the SAME sub-phase.",
+        "doubling_time_days": "Tumour volume doubling time in days. Faster-growing tumours (lower dt) respond differently to treatment timing."
+      },
+      "regimens": [
+        {
+          "name": "FOLFOXIRI + Bev",
+          "agents": [
+            "fu",
+            "iri",
+            "oxa",
+            "bev"
+          ],
+          "stage": "met_1l",
+          "trial": "TRIBE",
+          "standard": true
+        },
+        {
+          "name": "FOLFIRI + Bev",
+          "agents": [
+            "fu",
+            "iri",
+            "bev"
+          ],
+          "stage": "met_1l",
+          "trial": "AVF2107g",
+          "standard": true
+        },
+        {
+          "name": "FOLFIRI + Cetuximab (KRAS WT)",
+          "agents": [
+            "fu",
+            "iri",
+            "cetux"
+          ],
+          "stage": "met_1l",
+          "trial": "CRYSTAL",
+          "standard": true
+        },
+        {
+          "name": "Pembro (MSI-H only)",
+          "agents": [
+            "pembro_c"
+          ],
+          "stage": "met_1l",
+          "trial": "KEYNOTE-177",
+          "standard": true
+        }
+      ]
+    }
+  },
+  "sigma_generative": {
+    "breast_hr|fulv+palbo|met_2l": {
+      "value": 0.761,
+      "mechanism": "CDK4/6 inhibition exposes hidden ER dependency"
+    },
+    "breast_hr|abema+fulv|met_2l": {
+      "value": 2.646,
+      "mechanism": "Strong CDK4/6 Transform exposes hidden ER dependency"
+    },
+    "breast_hr|fulv+ribo|met_2l": {
+      "value": 2.387,
+      "mechanism": "CDK4/6 inhibition exposes hidden ER dependency"
+    },
+    "breast_hr|alpe+fulv|met_2l": {
+      "value": 0.643,
+      "mechanism": "PI3K inhibition exposes ER pathway dependency"
+    },
+    "nsclc|carbo+pem+pembro_l|met_1l": {
+      "value": 0.226,
+      "mechanism": "Chemotherapy induces immunogenic cell death"
+    },
+    "pancreatic|fu_p+iri_p+oxa_p|met_1l": {
+      "value": 0.455,
+      "mechanism": "Three agents expose stromal dependencies"
+    },
+    "colorectal|bev+fu+iri+oxa|met_1l": {
+      "value": 0.21,
+      "source": "Calibrated from TRIBE"
+    },
+    "colorectal|bev+fu+iri|met_1l": {
+      "value": 0.21,
+      "source": "Calibrated from TRIBE control"
+    }
+  },
+  "evidence": {
+    "melanoma": {
+      "nivo|met_1l": {
+        "trial": "CheckMate 066",
+        "orr": 40,
+        "pfs_months": 5.1,
+        "year": 2015,
+        "observed_orr": 40.0,
+        "n": 210
+      },
+      "pembro_m|met_1l": {
+        "trial": "KEYNOTE-006",
+        "orr": 33,
+        "pfs_months": 5.5,
+        "year": 2015,
+        "observed_orr": 33.7,
+        "n": 279
+      },
+      "ipi|met_1l": {
+        "trial": "MDX010-20",
+        "orr": 11,
+        "pfs_months": 2.9,
+        "year": 2010,
+        "observed_orr": 10.9,
+        "n": 137
+      },
+      "ipi+nivo|met_1l": {
+        "trial": "CheckMate 067",
+        "orr": 58,
+        "pfs_months": 11.5,
+        "year": 2015,
+        "observed_orr": 58.0,
+        "n": 314
+      },
+      "dab+tram|met_1l": {
+        "trial": "COMBI-d",
+        "orr": 68,
+        "pfs_months": 11.1,
+        "year": 2015,
+        "observed_orr": 69.0,
+        "n": 211
+      },
+      "bini+enco|met_1l": {
+        "trial": "COLUMBUS",
+        "orr": 63,
+        "pfs_months": 14.9,
+        "year": 2018,
+        "observed_orr": 63.0,
+        "n": 192
+      }
+    },
+    "breast_hr": {
+      "let|met_1l": {
+        "trial": "PALOMA-2 ctrl",
+        "orr": 35,
+        "pfs_months": 14.5,
+        "year": 2016,
+        "observed_orr": 34.7,
+        "n": 222
+      },
+      "let+palbo|met_1l": {
+        "trial": "PALOMA-2",
+        "orr": 42,
+        "pfs_months": 24.8,
+        "year": 2016,
+        "observed_orr": 42.1,
+        "n": 444
+      },
+      "let+ribo|met_1l": {
+        "trial": "MONALEESA-2",
+        "orr": 41,
+        "pfs_months": 25.3,
+        "year": 2016,
+        "observed_orr": 40.7,
+        "n": 334
+      },
+      "fulv|met_2l": {
+        "trial": "PALOMA-3 ctrl",
+        "orr": 11,
+        "pfs_months": 4.6,
+        "year": 2016,
+        "observed_orr": 10.5,
+        "n": 174
+      },
+      "fulv+palbo|met_2l": {
+        "trial": "PALOMA-3",
+        "orr": 19,
+        "pfs_months": 9.5,
+        "year": 2016,
+        "observed_orr": 21.0,
+        "n": 347
+      },
+      "abema+fulv|met_2l": {
+        "trial": "MONARCH-2",
+        "orr": 35,
+        "pfs_months": 16.4,
+        "year": 2017,
+        "observed_orr": 35.2,
+        "n": 446
+      },
+      "fulv+ribo|met_2l": {
+        "trial": "MONALEESA-3",
+        "orr": 33,
+        "pfs_months": 20.5,
+        "year": 2019,
+        "observed_orr": 32.4,
+        "n": 484
+      },
+      "alpe+fulv|met_2l": {
+        "trial": "SOLAR-1",
+        "orr": 26,
+        "pfs_months": 11.0,
+        "year": 2019,
+        "observed_orr": 26.6,
+        "n": 169
+      },
+      "eve+fulv|met_2l": {
+        "trial": "BOLERO-2",
+        "orr": 10.5,
+        "pfs_months": 6.9,
+        "year": 2012,
+        "observed_orr": 12.6,
+        "n": 485
+      }
+    },
+    "nsclc": {
+      "pembro_l|met_1l": {
+        "trial": "KEYNOTE-024",
+        "orr": 27,
+        "pfs_months": 10.3,
+        "year": 2016,
+        "observed_orr": 44.8,
+        "n": 154
+      },
+      "carbo+pem|met_1l": {
+        "trial": "KEYNOTE-189 ctrl",
+        "orr": 19.9,
+        "pfs_months": 4.9,
+        "year": 2018,
+        "observed_orr": 18.9,
+        "n": 206
+      },
+      "carbo+pem+pembro_l|met_1l": {
+        "trial": "KEYNOTE-189",
+        "orr": 48.3,
+        "pfs_months": 9.0,
+        "year": 2018,
+        "observed_orr": 47.6,
+        "n": 410
+      }
+    },
+    "pancreatic": {
+      "gem|met_1l": {
+        "trial": "Burris 1997",
+        "orr": 7,
+        "pfs_months": 2.3,
+        "year": 1997,
+        "observed_orr": 5.4,
+        "n": 63
+      },
+      "gem+nabp|met_1l": {
+        "trial": "MPACT",
+        "orr": 23,
+        "pfs_months": 5.5,
+        "year": 2013,
+        "observed_orr": 23.0,
+        "n": 431
+      },
+      "fu_p+iri_p+oxa_p|met_1l": {
+        "trial": "PRODIGE 4",
+        "orr": 31.6,
+        "pfs_months": 6.4,
+        "year": 2011,
+        "observed_orr": 31.6,
+        "n": 171
+      }
+    },
+    "prostate": {
+      "abi|crpc_1l": {
+        "trial": "COU-AA-302",
+        "orr": 36,
+        "pfs_months": 16.5,
+        "year": 2013,
+        "observed_orr": 36.0,
+        "n": 546
+      },
+      "enza|crpc_1l": {
+        "trial": "PREVAIL",
+        "orr": 29,
+        "pfs_months": 20.0,
+        "year": 2014,
+        "observed_orr": 29.0,
+        "n": 872
+      },
+      "doce|crpc_1l": {
+        "trial": "TAX 327",
+        "orr": 12,
+        "pfs_months": 6.3,
+        "year": 2004,
+        "observed_orr": 35.0,
+        "n": 332
+      },
+      "lupsma|crpc_3l": {
+        "trial": "VISION",
+        "orr": 30,
+        "pfs_months": 8.7,
+        "year": 2021,
+        "observed_orr": 51.0,
+        "n": 551
+      }
+    },
+    "rcc": {
+      "nivo_r+cabo|met_1l": {
+        "trial": "CheckMate-9ER",
+        "observed_orr": 55.7,
+        "n": 323,
+        "source": "Choueiri NEJM 2021"
+      },
+      "nivo_r+ipi_r|met_1l": {
+        "trial": "CheckMate-214 (int/poor)",
+        "observed_orr": 42.0,
+        "n": 425,
+        "source": "Motzer NEJM 2018"
+      },
+      "pembro_r+axi|met_1l": {
+        "trial": "KEYNOTE-426",
+        "observed_orr": 59.3,
+        "n": 432,
+        "source": "Rini NEJM 2019"
+      },
+      "pembro_r+lenva|met_1l": {
+        "trial": "CLEAR (KEYNOTE-581)",
+        "observed_orr": 71.0,
+        "n": 355,
+        "source": "Motzer NEJM 2021"
+      },
+      "suni|met_1l": {
+        "trial": "CheckMate-9ER control",
+        "observed_orr": 27.1,
+        "n": 328,
+        "source": "Choueiri NEJM 2021"
+      }
+    },
+    "colorectal": {
+      "fu+iri+bev|met_1l": {
+        "trial": "AVF2107g (IFL+Bev)",
+        "observed_orr": 44.8,
+        "n": 402,
+        "source": "Hurwitz NEJM 2004"
+      },
+      "fu+iri+oxa+bev|met_1l": {
+        "trial": "TRIBE (FOLFOXIRI+Bev)",
+        "observed_orr": 65.1,
+        "n": 252,
+        "source": "Loupakis NEJM 2014"
+      },
+      "fu+iri+bev|met_1l_control": {
+        "trial": "TRIBE control (FOLFIRI+Bev)",
+        "observed_orr": 53.1,
+        "n": 256,
+        "source": "Loupakis NEJM 2014"
+      },
+      "fu+iri+cetux|met_1l": {
+        "trial": "CRYSTAL (FOLFIRI+Cetux KRAS WT)",
+        "observed_orr": 57.3,
+        "n": 172,
+        "source": "Van Cutsem NEJM 2009"
+      }
+    }
+  }
+}

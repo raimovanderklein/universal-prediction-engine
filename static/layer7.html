@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layer7 — Universal Dissipative System Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF;--ink:#0A0A0A;--sec:#555;--dim:#999;--border:#E0E0E0;--lt:#F5F5F5;
+  --serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --green:#16A34A;--amber:#CA8A04;--red:#DC2626;--seal:#C23B22;
+  --D:#3B82F6;--R:#E5A000;--G:#0EA472;--S:#8B5CF6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
+::selection{background:var(--ink);color:#fff}
+
+nav{height:52px;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);z-index:100}
+.nav-logo{font-family:var(--serif);font-size:18px}
+.nav-right{display:flex;align-items:center;gap:16px}
+.loop-phase{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;padding:5px 14px;border:2px solid var(--ink)}
+.loop-phase.hold{background:var(--ink);color:#fff}
+.loop-phase.move{background:var(--amber);color:#fff;border-color:var(--amber)}
+.loop-phase.launch{background:var(--seal);color:#fff;border-color:var(--seal)}
+.nav-back{font-size:12px;color:var(--dim);text-decoration:none}
+
+.shell{display:grid;grid-template-columns:280px 1fr 360px;height:calc(100vh - 52px);margin-top:52px}
+.pnl{overflow-y:auto;scrollbar-width:thin}
+.pnl::-webkit-scrollbar{width:3px}.pnl::-webkit-scrollbar-thumb{background:var(--border)}
+.pnl-l{border-right:1px solid var(--border)}
+.pnl-c{padding:20px 24px}
+.pnl-r{border-left:1px solid var(--border);padding:16px 20px}
+
+/* TYPOGRAPHY */
+.lbl{font-size:10px;font-weight:700;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.ttl{font-family:var(--serif);font-size:18px;margin-bottom:4px}
+.big-num{font-family:var(--mono);font-size:48px;font-weight:700;letter-spacing:-.04em;line-height:1}
+
+/* SETUP */
+.setup{max-width:480px;margin:0 auto;padding:40px 0}
+.s-step{font-size:10px;font-weight:700;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.s-q{font-family:var(--serif);font-size:22px;margin-bottom:8px}
+.s-hint{font-size:13px;color:var(--sec);margin-bottom:14px;line-height:1.5}
+.s-input{width:100%;padding:12px 14px;border:2px solid var(--border);font-family:var(--sans);font-size:15px;outline:none}
+.s-input:focus{border-color:var(--ink)}
+.s-choices{display:flex;gap:8px}
+.s-ch{flex:1;padding:16px;border:2px solid var(--border);cursor:pointer;text-align:left;background:none;font-family:var(--sans)}
+.s-ch:hover{border-color:var(--ink)}.s-ch.sel{border-color:var(--ink);background:var(--lt)}
+.s-ch b{font-size:15px;display:block}.s-ch span{font-size:11px;color:var(--sec);margin-top:4px;display:block;line-height:1.3}
+.s-btn{margin-top:16px;padding:12px;width:100%;background:var(--ink);color:#fff;border:none;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer}
+.s-btn:disabled{opacity:.2;cursor:default}
+
+/* PROGRESS */
+.prog{padding:10px 16px;border-bottom:1px solid var(--border)}
+.prog.dim{opacity:.25}.prog.done{opacity:.5}
+.prog .p-n{font-family:var(--mono);font-size:10px;color:var(--dim)}.prog .p-n.ok{color:var(--green)}
+.prog .p-v{font-family:var(--mono);font-size:12px;font-weight:600;margin-top:2px}
+
+/* EVENT WALK */
+.ew-card{padding:14px;border:2px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all .12s}
+.ew-card:hover{border-color:var(--ink)}.ew-card.confirmed{border-color:var(--green);background:rgba(22,163,74,.03)}
+.ew-card.current{border-color:var(--ink);background:var(--lt)}
+.ew-card.future{opacity:.4}
+.ew-num{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.ew-nm{font-size:14px;font-weight:700;margin:2px 0}
+.ew-ev{font-size:12px;color:var(--sec);line-height:1.4}
+.ew-test{font-size:11px;color:var(--dim);margin-top:4px}
+.ew-who{margin-top:8px;padding:8px;background:var(--lt);border:1px solid var(--border)}
+.ew-who-label{font-size:9px;font-weight:700;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.ew-who-input{width:100%;padding:6px 8px;border:1px solid var(--border);font-family:var(--sans);font-size:12px;outline:none}
+.ew-who-input:focus{border-color:var(--ink)}
+.ew-btns{display:flex;gap:6px;margin-top:8px}
+.ew-btn{padding:6px 14px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;border:2px solid var(--border);background:none}
+.ew-btn:hover{border-color:var(--ink)}.ew-btn.yes{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* TIMELINE */
+.tl-realms{display:flex;gap:1px;font-size:9px;font-weight:700;color:var(--dim);margin-bottom:2px}
+.tl-realms span{flex:1;text-align:center;padding:2px 0}
+.timeline{display:flex;gap:1px;margin-bottom:16px}
+.tl-pos{flex:1;min-width:0;padding:5px 1px;text-align:center;font-size:8px;cursor:pointer;border:1px solid var(--border);transition:all .12s;overflow:hidden}
+.tl-pos:hover{border-color:var(--ink);background:var(--lt)}
+.tl-pos.cur{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:700}
+.tl-pos.past{background:var(--lt)}
+.tl-n{font-family:var(--mono);font-size:7px;opacity:.5}.tl-pos.cur .tl-n{opacity:1}
+
+/* INFO BOX */
+.ibox{padding:12px 14px;border-left:3px solid var(--ink);background:var(--lt);margin-bottom:14px;font-size:13px;line-height:1.5}
+
+/* SP CARDS */
+.sp{padding:12px 14px;border:2px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all .12s}
+.sp:hover{border-color:var(--ink)}.sp.zoomed{border-color:var(--ink);background:var(--lt)}
+.sp-hdr{display:flex;align-items:center;justify-content:space-between}
+.sp-nm{font-size:13px;font-weight:700}
+.sp-badge{font-family:var(--mono);font-size:10px;padding:2px 8px}
+.sp-cov{background:rgba(22,163,74,.08);color:var(--green)}
+.sp-gap{background:rgba(220,38,38,.08);color:var(--red)}
+.sp-weak{background:rgba(202,138,4,.08);color:var(--amber)}
+.sp-pr{font-size:11px;color:var(--dim);margin-top:4px}
+.sp-agents{font-size:11px;color:var(--sec);margin-top:6px}
+
+/* AGENT CARDS */
+.ag{padding:10px 12px;border:2px solid var(--border);margin-bottom:4px;cursor:pointer;transition:all .12s}
+.ag:hover{border-color:var(--ink)}
+.ag-hdr{display:flex;align-items:center;gap:8px}
+.ag-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ag-nm{font-size:13px;font-weight:700;flex:1}
+.ag-meff{font-family:var(--mono);font-size:14px;font-weight:700}
+.ag-det{font-size:10px;color:var(--dim);margin-top:4px;display:flex;gap:10px}
+.ag-wit{font-size:11px;color:var(--sec);font-style:italic;margin-top:6px;border-top:1px solid var(--border);padding-top:6px}
+
+/* ADD AGENT FORM */
+.add-btn{width:100%;padding:10px;border:2px dashed var(--border);background:none;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--dim)}
+.add-btn:hover{border-color:var(--ink);color:var(--ink)}
+.af{padding:12px;border:2px solid var(--ink);background:var(--lt);margin-top:6px}
+.af-row{display:flex;gap:6px;margin-bottom:6px}
+.af-f{flex:1}
+.af-l{font-size:9px;font-weight:700;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.af-i,.af-s{width:100%;padding:7px 8px;border:1px solid var(--border);font-family:var(--sans);font-size:12px;outline:none;background:#fff}
+.af-i:focus,.af-s:focus{border-color:var(--ink)}
+.af-t{width:100%;padding:7px 8px;border:1px solid var(--border);font-family:var(--sans);font-size:12px;outline:none;resize:none;background:#fff}
+.af-go{padding:8px;width:100%;background:var(--ink);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;margin-top:4px;font-family:var(--sans)}
+
+/* AGENT DETAIL — zoom L7 */
+.ad{padding:14px;border:2px solid var(--ink);background:var(--lt)}
+.ad-nm{font-family:var(--serif);font-size:20px;margin-bottom:12px}
+.ad-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.ad-cell{padding:8px;background:#fff;border:1px solid var(--border)}
+.ad-cl{font-size:8px;font-weight:700;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.ad-cv{font-family:var(--mono);font-size:18px;font-weight:700;margin-top:2px}
+.ad-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px}
+.ad-mini{padding:6px;background:#fff;border:1px solid var(--border);text-align:center}
+.ad-ml{font-size:8px;color:var(--dim)}.ad-mv{font-family:var(--mono);font-size:13px;font-weight:600}
+
+/* LAUNCH PHASE */
+.launch-sp{padding:10px;border-left:3px solid var(--border);margin-bottom:4px;background:var(--lt)}
+.launch-sp-nm{font-size:11px;font-weight:700}
+.launch-sp-q{font-size:11px;color:var(--sec);margin-top:2px}
+
+/* RIGHT PANEL */
+.int{padding:10px 12px;border-left:3px solid var(--green);background:rgba(22,163,74,.03);margin-bottom:6px;font-size:12px;line-height:1.4}
+.int.warn{border-color:var(--amber);background:rgba(202,138,4,.03)}
+.int.crit{border-color:var(--red);background:rgba(220,38,38,.03)}
+.int-type{font-size:9px;font-weight:700;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.int-act{font-weight:700}.int-rat{color:var(--sec);margin-top:3px}
+
+/* MOVE ROWS */
+.mv{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;cursor:pointer;transition:background .1s}
+.mv:hover{background:var(--lt)}
+.mv-rank{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--dim);width:18px;flex-shrink:0}
+.mv-fn{font-weight:700;width:80px;flex-shrink:0}
+.mv-sp{color:var(--sec);flex:1}
+.mv-reason{font-size:10px;color:var(--dim);flex:2}
+.mv-delta{font-family:var(--mono);font-weight:700;color:var(--green)}
+.mv-cov{font-family:var(--mono);font-size:10px;color:var(--dim);width:26px;text-align:right}
+
+/* COVERAGE BAR */
+.cov{display:flex;gap:2px;margin:6px 0}.cov-s{flex:1;height:5px}.cov-y{background:var(--ink)}.cov-n{background:var(--border)}
+.cov-l{display:flex;justify-content:space-between;font-size:8px;color:var(--dim);margin-bottom:10px}
+
+/* HEALTH BAR */
+.hbar{height:3px;background:var(--border);margin:6px 0;overflow:hidden}.hfill{height:100%}
+
+/* OBSERVER */
+.obs{display:flex;align-items:center;gap:6px;padding:5px 16px;font-size:11px}
+.obs-d{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.obs-nm{font-weight:600;flex:1}
+.obs-b{font-size:9px;padding:1px 5px;border-radius:2px}
+
+/* PHASE IND */
+.phi{padding:10px 16px;border-bottom:1px solid var(--border)}
+.phi-mode{font-family:var(--mono);font-size:12px;font-weight:700}
+.phi-msg{font-size:11px;color:var(--sec)}
+
+/* WARN */
+.wrn{padding:8px 10px;border-left:3px solid var(--amber);background:rgba(202,138,4,.04);font-size:11px;line-height:1.4;color:var(--sec);margin-bottom:6px}
+.wrn b{color:var(--amber)}
+
+.empty{padding:20px 16px;text-align:center;color:var(--dim);font-size:12px;line-height:1.5}
+
+/* BREADCRUMB */
+.bc{font-size:11px;color:var(--dim);margin-bottom:14px;display:flex;align-items:center;gap:4px}
+.bc span{cursor:pointer}.bc span:hover{color:var(--ink);text-decoration:underline}
+.bc .bc-cur{color:var(--ink);font-weight:600;cursor:default !important}.bc .bc-cur:hover{text-decoration:none !important}
+.bc-sep{color:var(--border)}
+
+/* BUTTONS */
+.btn-e{padding:6px 10px;border:1px solid var(--border);background:none;cursor:pointer;font-size:11px;font-family:var(--sans);color:var(--ink)}
+.btn-e:hover{border-color:var(--ink);background:var(--lt)}
+.btn-r{padding:6px 10px;border:1px solid var(--red);background:none;cursor:pointer;font-size:11px;font-family:var(--sans);color:var(--red)}
+.btn-r:hover{background:rgba(220,38,38,.04)}
+.btn-launch{padding:10px 20px;background:var(--seal);color:#fff;border:none;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-top:8px}
+.btn-launch:hover{opacity:.9}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Layer7</span>
+  <div class="nav-right">
+    <div id="loop-indicator"></div>
+    <a href="/" class="nav-back">← generativegeometry.science</a>
+  </div>
+</nav>
+
+<div class="shell">
+  <div class="pnl pnl-l" id="pnl-l"></div>
+  <div class="pnl pnl-c" id="pnl-c"></div>
+  <div class="pnl pnl-r" id="pnl-r"></div>
+</div>
+
+<script>
+const API = window.location.origin;
+const RC = ['#3B82F6','#E5A000','#0EA472','#8B5CF6'];
+const RM = ['Δ Potentiality','ᚱ Construction','ᚷ Encounter','Σ Conservation'];
+const SP_NM = ['Signal','Structure','Encounter','Conservation'];
+const SP_CLR = ['#2563EB','#7C3AED','#059669','#DC2626'];
+const FN_CLR = {sentinel:'#3B82F6',miner:'#8B5CF6',architect:'#0EA472',catalyst:'#E5543E',observer:'#E5A000'};
+const FN_NM = {sentinel:'Sentinel',miner:'Miner',architect:'Architect',catalyst:'Catalyst',observer:'Observer'};
+const P16 = ['Disturbance','Accumulation','Preview','Commitment','Initiation','Architecture','Testing','Selection','Output','Discovery','Integration','Equilibrium','Differentiation','Surveillance','Compensation','Continuation'];
+
+// ── STATE ──
+let S = {
+  phase:'setup', step:1,
+  system:'', interacting:'', intent:null, metSystem:null,
+  domain:'org',
+  position:null,
+  loopPhase:'hold', // hold | move | launch
+  zoom:null, // {sp} | {sp, agentId} | {sp, agentId, launching:true}
+  agents:[], nextId:1,
+  // Cached API responses
+  holdData:null, moveData:null, structure:null, events:[]
+};
+
+// ── INIT ──
+async function init(){
+  const r = await fetch(API+'/api/l7/structure');
+  S.structure = await r.json();
+  render();
+}
+
+// ── API CALLS ──
+function sysPayload(){
+  return {
+    name:S.system, domain:S.domain, interacting_with:S.interacting,
+    intent:S.intent, position:S.position, age:0,
+    agents:S.agents.map(a=>({
+      id:a.id, function:a.fn, subphase:a.sp, potency:a.M, drain:a.D,
+      position_assigned:a.posA, depth:a.depth, label:a.label,
+      witness:a.witness, specificity:a.specificity||1,
+      n_non_target_cycles:a.ntc||0, sub_witnesses:a.subW||{}
+    }))
+  };
+}
+
+async function fetchHold(){
+  const r = await fetch(API+'/api/l7/hold',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(sysPayload())});
+  S.holdData = await r.json();
+}
+
+async function fetchMove(){
+  const r = await fetch(API+'/api/l7/move',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(sysPayload())});
+  S.moveData = await r.json();
+}
+
+async function fetchEvents(){
+  const r = await fetch(API+'/api/l7/events/'+S.domain+'?resolution=64');
+  S.events = await r.json();
+}
+
+// ── RENDER ──
+async function render(){
+  if(S.phase==='setup'){renderSetup();return}
+  // Active phase — fetch from API
+  await fetchHold();
+  await fetchMove();
+  document.getElementById('loop-indicator').innerHTML = `<span class="loop-phase ${S.loopPhase}">${S.loopPhase.toUpperCase()}</span>`;
+  renderLeft();
+  renderCentre();
+  renderRight();
+}
+
+// ══════════════════════════════════
+// SETUP
+// ══════════════════════════════════
+function renderSetup(){
+  document.getElementById('loop-indicator').innerHTML = '';
+  const L=document.getElementById('pnl-l');
+  const C=document.getElementById('pnl-c');
+  const R=document.getElementById('pnl-r');
+
+  L.innerHTML=`<div style="padding:16px">
+    <div class="lbl">Layer7</div>
+    <div class="ibox" style="border-left-color:var(--seal);margin-top:8px">
+      <b>Seven layers. Any system.</b><br><br>
+      Position → Sub-phase → Agent → Parameters → Combination → Move → Launch.<br><br>
+      Hold to understand. Cross to intervene. Observe the result. Hold again.<br><br>
+      <span style="font-family:var(--mono);font-size:11px">M_eff = M × (1−D) / (1+D)</span>
+    </div>
+  </div>`;
+
+  R.innerHTML=`<div style="padding:16px">
+    <div class="lbl">Setup</div>
+    ${pStep(1,'Which system needs attention?',S.system)}
+    ${pStep(2,'What is it interacting with?',S.interacting)}
+    ${pStep(3,'Rescued or win?',S.intent==='rescue'?'Rescue':S.intent==='win'?'Win':'')}
+    ${S.intent==='win'?pStep(4,'Met the interacting system?',S.metSystem===true?'Yes':S.metSystem===false?'Not yet':''):''}
+  </div>`;
+
+  let h='<div class="setup">';
+  if(S.step===1){
+    h+=`<div class="s-step">Step 1</div>
+      <div class="s-q">Which system needs attention?</div>
+      <div class="s-hint">The system you care about. The one you are responsible for.</div>
+      <input class="s-input" id="i-sys" placeholder="e.g. Pacmed, Human body, National grid…" value="${S.system}" autofocus>
+      <button class="s-btn" id="btn-n" onclick="next()" ${S.system?'':'disabled'}>Continue</button>`;
+  } else if(S.step===2){
+    h+=`<div class="s-step">Step 2</div>
+      <div class="s-q">What is ${S.system} interacting with?</div>
+      <div class="s-hint">The environment, opponent, context it is up against.</div>
+      <input class="s-input" id="i-int" placeholder="e.g. Hospital market, Cancer, Atmosphere…" value="${S.interacting}" autofocus>
+      <button class="s-btn" id="btn-n" onclick="next()" ${S.interacting?'':'disabled'}>Continue</button>`;
+  } else if(S.step===3){
+    h+=`<div class="s-step">Step 3</div>
+      <div class="s-q">Does ${S.system} need to be rescued or does it need to win?</div>
+      <div class="s-hint">Rescued: something that existed is being degraded. Win: needs to advance.</div>
+      <div class="s-choices">
+        <button class="s-ch ${S.intent==='rescue'?'sel':''}" onclick="S.intent='rescue';S.metSystem=null;render()"><b>Rescued</b><span>Under threat. Losing coherence.</span></button>
+        <button class="s-ch ${S.intent==='win'?'sel':''}" onclick="S.intent='win';S.metSystem=null;render()"><b>Win</b><span>Needs to advance. Break through.</span></button>
+      </div>
+      <button class="s-btn" id="btn-n" onclick="next()" ${S.intent?'':'disabled'}>Continue</button>`;
+  } else if(S.step===4){
+    h+=`<div class="s-step">Step 4</div>
+      <div class="s-q">Has ${S.system} met ${S.interacting} yet?</div>
+      <div class="s-hint">Has the system actually encountered what it is trying to overcome?</div>
+      <div class="s-choices">
+        <button class="s-ch ${S.metSystem===false?'sel':''}" onclick="S.metSystem=false;render()"><b>Not yet</b><span>Still building. Construction.</span></button>
+        <button class="s-ch ${S.metSystem===true?'sel':''}" onclick="S.metSystem=true;render()"><b>Yes</b><span>Already encountering reality.</span></button>
+      </div>
+      <button class="s-btn" id="btn-n" onclick="next()" ${S.metSystem!==null?'':'disabled'}>Begin</button>`;
+  } else if(S.step===5){
+    // Event walk — find position
+    h+=renderEventWalk();
+  }
+  h+='</div>';
+  C.innerHTML=h;
+  bindSetupInputs();
+}
+
+function renderEventWalk(){
+  if(!S.events.length) return '<div class="empty">Loading events...</div>';
+  let h=`<div class="s-step">Find your position</div>
+    <div class="s-q">What is the lowest event that genuinely happened?</div>
+    <div class="s-hint">Start from the top. Each event either happened or it did not. Go down until you hit "no." The last "yes" is your position.</div>`;
+
+  // Show events grouped by challenge (4 per group)
+  const pos = S.position || 0;
+  for(let i=0; i<S.events.length && i<64; i++){
+    const e = S.events[i];
+    const p = e.p || (i+1);
+    const confirmed = p <= pos;
+    const isCurrent = p === pos;
+    const isNext = p === pos + 1;
+    const chIdx = Math.floor((p-1)/4);
+
+    // Challenge header
+    if((p-1)%4===0){
+      const realm = Math.floor(chIdx/4);
+      h+=`<div style="margin-top:${i>0?'16px':'8px'};padding:6px 0;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:${RC[realm]};letter-spacing:.08em">${chIdx+1}. ${e.ch!==undefined?S.events.filter(x=>(x.p||0)>chIdx*4&&(x.p||0)<=chIdx*4+4).length?'':'':''} ${RM[realm]}</div>`;
+    }
+
+    const cls = confirmed ? 'confirmed' : isNext ? 'current' : 'future';
+    h+=`<div class="ew-card ${cls}" onclick="eventClick(${p})">
+      <div class="ew-num">${String(p).padStart(2,'0')} · SP${((p-1)%4)+1} ${SP_NM[(p-1)%4]}</div>
+      <div class="ew-nm">${e.nm}</div>
+      <div class="ew-ev">${e.ev}</div>
+      <div class="ew-test"><b>Test:</b> ${e.test}</div>
+      ${isCurrent?'<div style="margin-top:6px;font-size:11px;color:var(--green);font-weight:700">✓ This is your current position</div>':''}
+      ${isNext?`<div class="ew-btns">
+        <button class="ew-btn yes" onclick="event.stopPropagation();confirmEvent(${p})">Yes — this happened</button>
+        <button class="ew-btn" onclick="event.stopPropagation();denyEvent(${p})">No — this has not happened</button>
+      </div>`:''}
+    </div>`;
+
+    // Stop showing after a few unconfirmed
+    if(!confirmed && !isNext && p > pos + 4) break;
+  }
+
+  if(pos > 0){
+    h+=`<div style="margin-top:16px;padding:12px;background:var(--lt);border:2px solid var(--ink)">
+      <div style="font-weight:700">Position confirmed: ${pos}</div>
+      <div style="font-size:12px;color:var(--sec);margin-top:4px">${S.events[pos-1]?.nm} — ${S.events[pos-1]?.ev}</div>
+      <button class="s-btn" style="margin-top:8px" onclick="startBuildBack()">Begin — populate agents</button>
+    </div>`;
+  }
+  return h;
+}
+
+function pStep(n,label,val){
+  const done=val&&S.step>n,cur=S.step===n;
+  return`<div class="prog ${done?'done':cur?'':'dim'}">
+    <div class="p-n ${done?'ok':''}">${done?'✓':''} ${n}</div>
+    <div style="font-size:12px;color:var(--sec)">${label}</div>
+    ${done?`<div class="p-v">${val}</div>`:''}
+  </div>`;
+}
+
+function bindSetupInputs(){
+  const is=document.getElementById('i-sys');
+  if(is){is.addEventListener('input',e=>{S.system=e.target.value.trim();document.getElementById('btn-n').disabled=!S.system});is.addEventListener('keydown',e=>{if(e.key==='Enter'&&S.system)next()});is.focus()}
+  const ii=document.getElementById('i-int');
+  if(ii){ii.addEventListener('input',e=>{S.interacting=e.target.value.trim();document.getElementById('btn-n').disabled=!S.interacting});ii.addEventListener('keydown',e=>{if(e.key==='Enter'&&S.interacting)next()});ii.focus()}
+}
+
+async function next(){
+  if(S.step===1&&S.system)S.step=2;
+  else if(S.step===2&&S.interacting)S.step=3;
+  else if(S.step===3&&S.intent){
+    if(S.intent==='rescue'){S.position=0;S.step=5;await fetchEvents();render();return}
+    S.step=4;
+  }
+  else if(S.step===4){S.position=0;S.step=5;await fetchEvents();render();return}
+  render();
+}
+
+function confirmEvent(p){S.position=p;render()}
+function denyEvent(p){/* position stays at p-1 */render()}
+function eventClick(p){if(p<=S.position)S.position=p-1;else S.position=p;render()}
+
+async function startBuildBack(){
+  // Determine starting position from intent
+  // For rescue: the position they confirmed
+  // For win: same
+  S.phase='active';
+  S.loopPhase='hold';
+  S.zoom=null;
+  await render();
+}
+
+async function activate(){
+  S.phase='active';S.loopPhase='hold';S.zoom=null;
+  await render();
+}
+
+// ══════════════════════════════════
+// LEFT — HOLD (L1-L5)
+// ══════════════════════════════════
+function renderLeft(){
+  const el=document.getElementById('pnl-l');
+  if(!S.holdData){el.innerHTML='<div class="empty">Loading...</div>';return}
+  const h=S.holdData;
+  const mode=h.mode;
+  let html='';
+
+  // Phase
+  const ml=mode==='hold'?'HOLD':mode==='cross'?'CROSS':'HOLD + CROSS';
+  const mc=mode==='hold'?'var(--D)':mode==='cross'?'var(--seal)':'var(--S)';
+  const mm=mode==='hold'?'See clearly. Do not act yet.':mode==='cross'?'Build and encounter. Act.':'Persist and watch for drift.';
+  html+=`<div class="phi"><div class="phi-mode" style="color:${mc}">${ml}</div><div class="phi-msg">${mm}</div></div>`;
+
+  // L5 Health
+  const L5=h.l5_combination;
+  const hc=L5.overall_health>0.5?'var(--green)':L5.overall_health>0.2?'var(--amber)':'var(--red)';
+  html+=`<div style="padding:12px 16px;border-bottom:1px solid var(--border)">
+    <div class="lbl">L5 System Health</div>
+    <div style="display:flex;align-items:baseline;justify-content:space-between">
+      <div class="big-num" style="color:${hc}">${(L5.overall_health*100).toFixed(1)}%</div>
+      <div style="font-size:11px;color:var(--dim)">${L5.coverage}/4</div>
+    </div>
+    <div class="hbar"><div class="hfill" style="width:${L5.overall_health*100}%;background:${hc}"></div></div>
+  </div>`;
+
+  // Coverage
+  html+=`<div style="padding:8px 16px">
+    <div class="cov">${[0,1,2,3].map(i=>`<div class="cov-s ${L5.sp_scores[i]?.covered?'cov-y':'cov-n'}"></div>`).join('')}</div>
+    <div class="cov-l"><span>Signal</span><span>Structure</span><span>Encounter</span><span>Conservation</span></div>
+  </div>`;
+
+  // Warnings
+  if(L5.warnings.length){
+    html+='<div style="padding:0 16px">';
+    L5.warnings.forEach(w=>html+=`<div class="wrn"><b>⚠</b> ${w}</div>`);
+    html+='</div>';
+  }
+
+  // L3 Agents
+  const agents=h.l3_agents||[];
+  html+=`<div class="lbl" style="padding:8px 16px 4px">L3 Agents (${agents.length})</div>`;
+  if(!agents.length){
+    html+=`<div class="empty">No agents. Click a sub-phase to add.</div>`;
+  } else {
+    for(const a of agents){
+      const mc2=a.M_eff<0?'var(--red)':a.M_eff<0.3?'var(--amber)':'var(--green)';
+      html+=`<div style="padding:8px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s" onclick="zoomAgent(${a.id})" onmouseover="this.style.background='var(--lt)'" onmouseout="this.style.background=''">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:6px;height:6px;border-radius:50%;background:${FN_CLR[a.function]||'#999'}"></div>
+          <div style="font-size:12px;font-weight:600;flex:1">${a.label}</div>
+          <div style="font-family:var(--mono);font-size:11px;color:${mc2}">${a.M_eff?.toFixed(2)}</div>
+        </div>
+        <div style="font-size:10px;color:var(--dim);margin-top:2px">${FN_NM[a.function]||a.function} · ${SP_NM[a.subphase]}${a.overstay>0?' · <span style="color:var(--red)">+'+a.overstay+'</span>':''}</div>
+      </div>`;
+    }
+  }
+
+  // Observers
+  const obs=h.l1_position.observer_births;
+  html+=`<div class="lbl" style="padding:8px 16px 4px">Observers (${obs.active.length}/${obs.total})</div>`;
+  obs.active.forEach(o=>html+=`<div class="obs"><div class="obs-d" style="background:var(--green)"></div><span class="obs-nm">${o.name}</span><span class="obs-b" style="background:rgba(22,163,74,.08);color:var(--green)">active</span></div>`);
+  obs.next.forEach(o=>html+=`<div class="obs"><div class="obs-d" style="background:var(--border)"></div><span class="obs-nm" style="color:var(--dim)">${o.name}</span><span class="obs-b" style="background:var(--lt);color:var(--dim)">pos ${o.born}</span></div>`);
+
+  el.innerHTML=html;
+}
+
+// ══════════════════════════════════
+// CENTRE — MAP + ZOOM
+// ══════════════════════════════════
+function renderCentre(){
+  const el=document.getElementById('pnl-c');
+  if(!S.holdData){el.innerHTML='<div class="empty">Loading...</div>';return}
+  const h=S.holdData;
+  const pos=S.position;
+  const rm=Math.floor((pos-1)/4);
+  let html='';
+
+  // Header
+  html+=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+    <div><div style="font-family:var(--serif);font-size:24px">${S.system}</div>
+    <div style="font-size:12px;color:var(--dim);margin-top:2px">vs ${S.interacting} · ${S.intent==='rescue'?'Rescue':'Win'}</div></div>
+    <div style="font-size:11px;color:var(--dim);cursor:pointer;text-decoration:underline" onclick="resetAll()">Reset</div>
+  </div>`;
+
+  // Breadcrumb
+  if(S.zoom){
+    html+=`<div class="bc"><span onclick="zoomOut()">Position ${pos}</span><span class="bc-sep">›</span>`;
+    if(S.zoom.agentId!=null){
+      html+=`<span onclick="zoomSP(${S.zoom.sp})">${SP_NM[S.zoom.sp]}</span><span class="bc-sep">›</span>`;
+      html+=S.zoom.launching?`<span class="bc-cur">Launch</span>`:`<span class="bc-cur">Agent</span>`;
+    } else {
+      html+=`<span class="bc-cur">${SP_NM[S.zoom.sp]}</span>`;
+    }
+    html+=`</div>`;
+  }
+
+  // Timeline
+  html+=`<div class="tl-realms">${[0,1,2,3].map(i=>`<span style="color:${i===rm?RC[i]:'var(--dim)'};${i===rm?'font-weight:700':''}">${RM[i]}</span>`).join('')}</div>`;
+  html+='<div class="timeline">';
+  for(let i=0;i<16;i++){
+    const n=i+1,r=Math.floor(i/4),cur=n===pos,past=n<pos;
+    html+=`<div class="tl-pos ${cur?'cur':past?'past':''}" onclick="selPos(${n})" style="${cur?'border-color:'+RC[r]+';background:'+RC[r]+';color:#fff':''}"><div class="tl-n">${String(n).padStart(2,'0')}</div>${P16[i].slice(0,4)}</div>`;
+  }
+  html+='</div>';
+
+  // Position info
+  const L1=h.l1_position;
+  const ev=L1.event;
+  html+=`<div class="ibox" style="border-left-color:${RC[rm]}">
+    <div style="font-size:9px;font-weight:700;color:${RC[rm]};text-transform:uppercase;letter-spacing:.08em">${L1.realm.sym} ${L1.realm.label} · Position ${pos}</div>
+    <div style="font-weight:700;margin:2px 0">${L1.position_name}</div>
+    ${L1.challenge?`<div style="font-size:11px;color:var(--sec)">Settles: ${L1.challenge.settles}</div>`:''}
+    ${ev?`<div style="margin-top:6px;padding:8px;background:rgba(0,0,0,.02);font-size:11px;line-height:1.5">
+      <div style="font-weight:700">${ev.nm}</div>
+      <div style="color:var(--sec)">${ev.ev}</div>
+      <div style="color:var(--dim);margin-top:4px"><b>Test:</b> ${ev.test}</div>
+    </div>`:''}
+  </div>`;
+
+  // Sub-phases or zoom
+  if(!S.zoom){
+    html+=`<div class="lbl">L2 Sub-phases</div>`;
+    const L2=h.l2_subphase;
+    for(let i=0;i<4;i++){
+      const sp=L2[i];
+      if(!sp)continue;
+      const cls=sp.status==='covered'?'sp-cov':sp.status==='weak'?'sp-weak':'sp-gap';
+      const txt=sp.status==='covered'?'Covered':sp.status==='weak'?'Weak':'Gap';
+      html+=`<div class="sp" onclick="zoomSP(${i})">
+        <div class="sp-hdr">
+          <span class="sp-nm" style="color:${SP_CLR[i]}">${sp.abbr} ${sp.name}</span>
+          <span class="sp-badge ${cls}">${txt}${sp.covered?' · '+sp.total_meff.toFixed(2):''}</span>
+        </div>
+        <div class="sp-pr">${sp.principle}</div>
+        ${sp.agents?.length?`<div class="sp-agents">${sp.agents.map(a=>`● ${a.label} <span style="font-family:var(--mono);color:var(--dim)">${a.M_eff?.toFixed(2)}</span>`).join(' ')}</div>`:''}
+      </div>`;
+    }
+  } else if(S.zoom.agentId==null){
+    html+=renderSPZoom(S.zoom.sp);
+  } else if(S.zoom.launching){
+    html+=renderLaunch(S.zoom.agentId);
+  } else {
+    html+=renderAgentZoom(S.zoom.agentId);
+  }
+
+  el.innerHTML=html;
+}
+
+function renderSPZoom(spIdx){
+  const sp=S.holdData.l2_subphase[spIdx];
+  if(!sp)return'';
+  let h=`<div style="border-left:3px solid ${SP_CLR[spIdx]};padding:12px 14px;background:var(--lt);margin-bottom:12px">
+    <div style="font-size:9px;font-weight:700;color:${SP_CLR[spIdx]};text-transform:uppercase;letter-spacing:.08em">${sp.abbr} ${sp.name}</div>
+    <div style="font-size:12px;color:var(--sec);margin-top:4px">${sp.principle}</div>
+    <div style="font-size:11px;color:var(--dim);margin-top:2px">Observable: ${sp.observable}</div>
+  </div>`;
+
+  if(sp.agents?.length){
+    h+=`<div class="lbl">Agents covering ${sp.name}</div>`;
+    for(const a of sp.agents){
+      const mc=a.M_eff<0?'var(--red)':a.M_eff<0.3?'var(--amber)':'var(--green)';
+      h+=`<div class="ag" onclick="zoomAgent(${a.id})">
+        <div class="ag-hdr"><div class="ag-dot" style="background:${FN_CLR[a.function]||'#999'}"></div>
+        <div class="ag-nm">${a.label}</div><div class="ag-meff" style="color:${mc}">${a.M_eff?.toFixed(3)}</div></div>
+        <div class="ag-det"><span>${FN_NM[a.function]||a.function}</span><span>M=${a.potency?.toFixed(2)}</span><span>D=${a.D_total?.toFixed(2)}</span>
+        ${a.overstay>0?`<span style="color:var(--red)">+${a.overstay}</span>`:''}</div>
+        ${a.witness?`<div class="ag-wit">"${a.witness}"</div>`:''}
+      </div>`;
+    }
+  } else {
+    h+=`<div style="padding:16px;border:2px dashed var(--border);text-align:center;color:var(--dim);font-size:12px;margin-bottom:6px">No agent covers ${sp.name}. Structural gap.</div>`;
+  }
+
+  h+=`<button class="add-btn" onclick="showForm(${spIdx})">+ Add agent at ${sp.name}</button><div id="form-${spIdx}"></div>`;
+  return h;
+}
+
+function renderAgentZoom(aid){
+  const a=S.agents.find(x=>x.id===aid);
+  if(!a)return'<div class="empty">Agent not found</div>';
+  const aData=(S.holdData.l3_agents||[]).find(x=>x.id===aid)||{};
+  const mc=aData.M_eff<0?'var(--red)':aData.M_eff<0.3?'var(--amber)':'var(--green)';
+
+  let h=`<div class="ad">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div style="width:12px;height:12px;border-radius:50%;background:${FN_CLR[a.fn]||'#999'}"></div>
+      <div class="ad-nm">${a.label}</div>
+    </div>
+    <div class="ad-grid">
+      <div class="ad-cell"><div class="ad-cl">Function</div><div style="font-size:14px;font-weight:700;margin-top:2px">${FN_NM[a.fn]||a.fn}</div></div>
+      <div class="ad-cell"><div class="ad-cl">M_eff</div><div class="ad-cv" style="color:${mc}">${aData.M_eff?.toFixed(3)||'—'}</div></div>
+    </div>
+    <div class="ad-3">
+      <div class="ad-mini"><div class="ad-ml">RAW M</div><div class="ad-mv">${a.M.toFixed(2)}</div></div>
+      <div class="ad-mini"><div class="ad-ml">DRAIN D</div><div class="ad-mv" style="color:${a.D>0.3?'var(--red)':'inherit'}">${a.D.toFixed(2)}</div></div>
+      <div class="ad-mini"><div class="ad-ml">OVERSTAY</div><div class="ad-mv" style="color:${(aData.overstay||0)>=2?'var(--red)':'inherit'}">${aData.overstay||0}</div></div>
+    </div>
+    ${a.witness?`<div style="padding:8px;background:#fff;border:1px solid var(--border);margin-bottom:10px">
+      <div class="ad-cl">Witnessed Event</div>
+      <div style="font-size:12px;color:var(--sec);font-style:italic;margin-top:2px">"${a.witness}"</div>
+    </div>`:''}
+  </div>`;
+
+  // L7 Launch button
+  h+=`<button class="btn-launch" onclick="launchAgent(${a.id})">Launch — enter agent's own cycle</button>`;
+
+  h+=`<div style="display:flex;gap:6px;margin-top:8px">
+    <button class="btn-e" onclick="editAgent(${a.id})" style="flex:1">Edit</button>
+    <button class="btn-r" onclick="rmAgent(${a.id})">Remove</button>
+  </div>`;
+
+  return h;
+}
+
+function renderLaunch(aid){
+  const a=S.agents.find(x=>x.id===aid);
+  if(!a)return'<div class="empty">Agent not found</div>';
+
+  let h=`<div style="margin-bottom:12px">
+    <div class="lbl">L7 Launch — ${a.label}</div>
+    <div style="font-size:13px;color:var(--sec);line-height:1.5;margin-bottom:10px">
+      The agent's own cycle. Four phases of execution. What needs to be true for each to work?
+    </div>
+  </div>`;
+
+  const questions = [
+    'What does this agent need to detect to do the job? Can it detect it?',
+    'What does this agent need in place to act? Is it there?',
+    'Has this agent actually faced the problem? What happened?',
+    'Can this agent sustain this work? What would make it stop?'
+  ];
+
+  for(let i=0;i<4;i++){
+    h+=`<div class="launch-sp" style="border-left-color:${SP_CLR[i]}">
+      <div class="launch-sp-nm" style="color:${SP_CLR[i]}">${SP_NM[i]}</div>
+      <div class="launch-sp-q">${questions[i]}</div>
+      <textarea class="af-t" rows="2" placeholder="What have you witnessed?" style="margin-top:6px"
+        onchange="setSubW(${a.id},${i},this.value)">${(a.subW&&a.subW[i])||''}</textarea>
+    </div>`;
+  }
+
+  h+=`<button class="s-btn" style="margin-top:12px" onclick="completeLaunch(${a.id})">Complete launch — return to Hold</button>`;
+  return h;
+}
+
+// ══════════════════════════════════
+// RIGHT — MOVE (L6)
+// ══════════════════════════════════
+function renderRight(){
+  const el=document.getElementById('pnl-r');
+  if(!S.moveData){el.innerHTML='<div class="empty">Loading...</div>';return}
+  const m=S.moveData;
+  let h='';
+
+  h+=`<div class="lbl">L6 Next Move</div>`;
+
+  // Gaps
+  if(m.gaps.length){
+    h+=`<div class="lbl" style="color:var(--red);margin-top:10px">Coverage Gaps</div>`;
+    m.gaps.forEach(g=>{
+      h+=`<div class="int crit"><div class="int-type">Gap · ${g.name}</div><div class="int-act">${g.name} is uncovered</div><div class="int-rat">${g.principle}</div></div>`;
+    });
+  }
+
+  // Overstayed from hold data
+  if(S.holdData?.l4_parameters?.overstayed?.length){
+    h+=`<div class="lbl" style="color:var(--amber);margin-top:10px">Overstayed</div>`;
+    S.holdData.l4_parameters.overstayed.forEach(o=>{
+      const a=o.agent;
+      h+=`<div class="int ${o.realms_past>=3?'crit':'warn'}"><div class="int-type">${o.realms_past>=3?'Pathological':'Neutral'}</div><div class="int-act">${a.label} — ${o.realms_past} realms past</div><div class="int-rat">${o.realms_past>=3?'Actively harmful.':'Present but useless.'}</div></div>`;
+    });
+  }
+
+  // Next moves
+  h+=`<div class="lbl" style="margin-top:14px">Recommended Moves</div>`;
+  if(m.next_moves.length){
+    m.next_moves.forEach((mv,i)=>{
+      h+=`<div class="mv">
+        <span class="mv-rank">${i+1}</span>
+        <span class="mv-fn">${mv.function_name}</span>
+        <span class="mv-sp">${mv.subphase_name}</span>
+        <span class="mv-delta">+${mv.delta_pct}%</span>
+        <span class="mv-cov">${mv.new_coverage}/4</span>
+      </div>`;
+    });
+    if(m.next_moves[0]){
+      const top=m.next_moves[0];
+      h+=`<div style="margin-top:8px;padding:10px;background:var(--lt);border-left:3px solid var(--green);font-size:12px;line-height:1.5">
+        <b>Best move:</b> ${top.reason}<br>
+        <span style="color:var(--sec)">Add a ${top.function_name} at ${top.subphase_name} → health improves to ${(top.new_health*100).toFixed(1)}%</span>
+      </div>`;
+    }
+  } else {
+    h+=`<div class="empty">Add agents to see move recommendations.</div>`;
+  }
+
+  // Supportive
+  if(m.supportive?.length){
+    h+=`<div class="lbl" style="margin-top:14px">Supportive Care</div>`;
+    m.supportive.forEach(s=>{
+      h+=`<div class="int"><div class="int-type">Supportive</div><div class="int-act">${s.target}</div><div class="int-rat">M_eff ${s.M_before.toFixed(3)} → ${s.M_after.toFixed(3)} <b style="color:var(--green)">(+${s.gain.toFixed(3)})</b></div></div>`;
+    });
+  }
+
+  // Phase drain
+  const pd=S.holdData?.l4_parameters?.phase_drain;
+  if(pd?.source){
+    h+=`<div class="lbl" style="margin-top:14px">Phase Drain</div>
+      <div class="int warn"><div class="int-type">${pd.transition||'Prior → current'}</div><div class="int-act">D=${pd.d} from ${pd.source}</div><div class="int-rat">Dominant agent (M=${pd.M}) at φ=${pd.phi}. What built you becomes what blocks you.</div></div>`;
+  }
+
+  el.innerHTML=h;
+}
+
+// ══════════════════════════════════
+// INTERACTIONS
+// ══════════════════════════════════
+function selPos(n){S.position=n;S.zoom=null;S.loopPhase='hold';render()}
+function zoomSP(sp){S.zoom={sp,agentId:null};render()}
+function zoomAgent(aid){const a=S.agents.find(x=>x.id===aid);if(!a)return;S.zoom={sp:a.sp,agentId:aid};render()}
+function zoomOut(){S.zoom=null;render()}
+
+function launchAgent(aid){
+  S.zoom={sp:S.zoom?.sp||0,agentId:aid,launching:true};
+  S.loopPhase='launch';
+  render();
+}
+
+function completeLaunch(aid){
+  // Return to hold — the loop closes
+  S.zoom=null;
+  S.loopPhase='hold';
+  render();
+}
+
+function showForm(spIdx){
+  const c=document.getElementById('form-'+spIdx);
+  if(!c)return;
+  if(c.innerHTML){c.innerHTML='';return}
+  c.innerHTML=`<div class="af">
+    <div class="af-row"><div class="af-f"><div class="af-l">Label</div><input class="af-i" id="af-l-${spIdx}" placeholder="Who/what is this agent?"></div></div>
+    <div class="af-row"><div class="af-f"><div class="af-l">Function</div><select class="af-s" id="af-fn-${spIdx}">
+      <option value="sentinel">Sentinel — guards boundary</option>
+      <option value="miner">Miner — extracts from below</option>
+      <option value="architect">Architect — transforms at level</option>
+      <option value="catalyst">Catalyst — accelerates from below</option>
+      <option value="observer">Observer — surveillance loop</option>
+    </select></div></div>
+    <div class="af-row">
+      <div class="af-f"><div class="af-l">Potency (0–1)</div><input class="af-i" id="af-m-${spIdx}" type="number" min="0" max="1" step="0.1" value="0.6"></div>
+      <div class="af-f"><div class="af-l">Drain (0–1)</div><input class="af-i" id="af-d-${spIdx}" type="number" min="0" max="1" step="0.05" value="0"></div>
+      <div class="af-f"><div class="af-l">Depth</div><input class="af-i" id="af-dp-${spIdx}" type="number" min="1" max="6" value="2"></div>
+    </div>
+    <div class="af-row"><div class="af-f"><div class="af-l">Assigned at position</div><input class="af-i" id="af-pa-${spIdx}" type="number" min="1" max="16" value="${S.position}"></div></div>
+    <div class="af-row"><div class="af-f"><div class="af-l">Witnessed event</div><textarea class="af-t" id="af-w-${spIdx}" rows="2" placeholder="What did you observe?"></textarea></div></div>
+    <button class="af-go" onclick="addAgent(${spIdx})">Add agent</button>
+  </div>`;
+}
+
+function addAgent(sp){
+  const l=document.getElementById('af-l-'+sp)?.value?.trim();
+  if(!l)return;
+  S.agents.push({
+    id:S.nextId++, fn:document.getElementById('af-fn-'+sp)?.value||'sentinel',
+    sp, M:Math.max(0,Math.min(1,parseFloat(document.getElementById('af-m-'+sp)?.value)||0.6)),
+    D:Math.max(0,Math.min(1,parseFloat(document.getElementById('af-d-'+sp)?.value)||0)),
+    depth:parseInt(document.getElementById('af-dp-'+sp)?.value)||2,
+    posA:parseInt(document.getElementById('af-pa-'+sp)?.value)||S.position,
+    label:l, witness:document.getElementById('af-w-'+sp)?.value?.trim()||'',
+    subW:{}, specificity:1, ntc:0
+  });
+  render();
+}
+
+function rmAgent(aid){
+  S.agents=S.agents.filter(a=>a.id!==aid);
+  if(S.zoom?.agentId===aid)S.zoom=null;
+  render();
+}
+
+function editAgent(aid){
+  const a=S.agents.find(x=>x.id===aid);if(!a)return;
+  const nl=prompt('Label:',a.label);if(nl!==null&&nl.trim())a.label=nl.trim();
+  const nm=prompt('Potency (0–1):',a.M);if(nm!==null)a.M=Math.max(0,Math.min(1,parseFloat(nm)||a.M));
+  const nd=prompt('Drain (0–1):',a.D);if(nd!==null)a.D=Math.max(0,Math.min(1,parseFloat(nd)||a.D));
+  render();
+}
+
+function setSubW(aid,sp,val){const a=S.agents.find(x=>x.id===aid);if(!a)return;if(!a.subW)a.subW={};a.subW[sp]=val}
+
+function resetAll(){S={phase:'setup',step:1,system:'',interacting:'',intent:null,metSystem:null,domain:'org',position:null,loopPhase:'hold',zoom:null,agents:[],nextId:1,holdData:null,moveData:null,structure:S.structure,events:[]};render()}
+
+init();
+</script>
+</body>
+</html>
