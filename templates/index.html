@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal Dissipative System Architecture</title>
+<style>
+body{font-family:system-ui;background:#0A0A0C;color:#E8E6E0;display:flex;justify-content:center;padding:60px 20px}
+.s{max-width:520px}
+h1{font-size:24px;font-weight:400;margin-bottom:8px}
+p{font-size:14px;color:#9A988E;line-height:1.6;margin-bottom:12px}
+code{font-size:12px;color:#E5A000;background:#1A1A22;padding:2px 6px;border-radius:3px}
+a{color:#C23B22;text-decoration:none}
+.ep{margin-top:24px;padding:12px;background:#111116;border:1px solid#2A2A36;border-radius:6px;font-size:12px;color:#6A6878}
+.ep span{color:#E8E6E0;font-weight:600}
+</style>
+</head>
+<body>
+<div class="s">
+<h1>Universal Dissipative System Architecture</h1>
+<p>One model. Any dissipative system. Two modes: <strong>HOLD</strong> (understand) and <strong>CROSS</strong> (intervene).</p>
+<p>M<sub>eff</sub> = M × (1−D) / (1+D)</p>
+<div class="ep">
+<span>API endpoints</span><br><br>
+POST <code>/api/diagnose</code> — HOLD mode. Full diagnosis.<br>
+POST <code>/api/intervene</code> — CROSS mode. Recommendations.<br>
+POST <code>/api/frontend</code> — Both modes + structure.<br>
+GET <code>/api/structure</code> — All reference data.<br>
+GET <code>/api/formula?M=0.9&D=0.15</code> — Quick calculator.<br>
+</div>
+<p style="margin-top:24px;font-size:11px;color:#6A6878">
+<a href="https://generativegeometry.science">Generative Geometry</a> · van der Klein (2026)
+</p>
+</div>
+</body>
+</html>

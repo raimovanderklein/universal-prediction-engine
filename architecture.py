@@ -215,7 +215,7 @@ class System:
     def intervene(self)->dict:
         h=self._health()
         return {'strike_order':self._strike(),'supportive':self._supportive(),'retire':self._overstayed(),
-                'gaps':[sp.name for sp in SubPhase if not h['sp'][sp]['covered']]}
+                'gaps':[sp.name for sp in SubPhase if not h['sp'][sp.name]['covered']]}
 
     # ── FULL STATE FOR FRONT-END ──
     def frontend(self)->dict:
@@ -242,17 +242,17 @@ class System:
         c=self._obs_cascade(); sp={}; w=[]
         for s in SubPhase:
             aa=[a for a in self.agents if a.subphase==s]
-            if not aa: sp[s]={'score':0,'covered':False,'agents':[]}; w.append(f'{s.name} uncovered'); continue
+            if not aa: sp[s.name]={'score':0,'covered':False,'agents':[]}; w.append(f'{s.name} uncovered'); continue
             p=1.0; dd=[]
             for a in aa:
                 e=a.M_eff(self.position,c)
                 if e>0: p*=(1-e)
                 elif e<0: p*=(1-e); w.append(f'{a.label} pathological')
                 dd.append({'label':a.label,'M_eff':round(e,3)})
-            sp[s]={'score':max(0,min(1,1-p)),'covered':True,'agents':dd}
+            sp[s.name]={'score':max(0,min(1,1-p)),'covered':True,'agents':dd}
         o=1.0
-        for s in SubPhase: v=sp[s]['score'] if sp[s]['covered'] else 0; o*=v if v>0 else 0.25
-        return {'overall':round(o,4),'coverage':sum(1 for s in SubPhase if sp[s]['covered']),'sp':sp,'warnings':w,'cascade':round(c,3)}
+        for s in SubPhase: v=sp[s.name]['score'] if sp[s.name]['covered'] else 0; o*=v if v>0 else 0.25
+        return {'overall':round(o,4),'coverage':sum(1 for s in SubPhase if sp[s.name]['covered']),'sp':sp,'warnings':w,'cascade':round(c,3)}
 
     def _phase_drain(self)->dict:
         pr=Realm((self.realm.value-1)%4); t=TRANSITIONS.get((pr,self.realm))
